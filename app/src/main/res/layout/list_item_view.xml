@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/list_view_item_delete_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="3dp"
+            android:contentDescription="@string/btn_del_desc"
+            android:focusable="false"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_del"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/list_view_item_update_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@id/list_view_item_delete_btn"
+            android:layout_marginRight="3dp"
+            android:contentDescription="@string/btn_edit_desc"
+            android:focusable="false"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_edit"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/list_view_textview_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/list_view_item_update_btn"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/transaction_item_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Category"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/transaction_item_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="Amount"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+            <TextView
+                android:id="@+id/transaction_item_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/transaction_item_amount"
+                android:layout_toRightOf="@id/transaction_item_category"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/empty"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textColor="@android:color/darker_gray" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal" >
+            <TextView
+                android:id="@+id/transaction_item_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Date" />
+
+            <TextView
+                android:id="@+id/transaction_item_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="Comment" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
+    defaultConfig {
+        applicationId "com.fsz570.easyaccounting"
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 1
+        versionName '1.0.0'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        debug {
+            debuggable true
+        }
+    }
+    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/color'] } }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile files('libs/android-support-v13.jar')
+    compile files('libs/mpandroidchartlibrary-1-7-3.jar')
+}

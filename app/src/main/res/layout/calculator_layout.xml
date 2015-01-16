@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="1"
+    android:rowCount="6" >
+
+    <!-- Row 1 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <EditText
+            android:id="@+id/cal_calculation_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:enabled="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="numberDecimal"
+            android:longClickable="false"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center"
+            android:maxLength="10" />
+
+        <Button
+            android:id="@+id/cal_btn_clear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_clear_text"
+            android:textColor="@android:color/holo_red_light"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style"/>
+    </LinearLayout>
+
+    <!-- Row 2 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <Button
+            android:id="@+id/cal_btn_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_7_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_8_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_9_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style"/>
+
+        <Button
+            android:id="@+id/cal_btn_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_plus_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+    </LinearLayout>
+
+    <!-- Row 3 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <Button
+            android:id="@+id/cal_btn_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_4_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_5_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_6_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_minus_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+    </LinearLayout>
+    <!-- Row 4 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <Button
+            android:id="@+id/cal_btn_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_1_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_2_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_3_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_times_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+    </LinearLayout>
+    <!-- Row 4 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <Button
+            android:id="@+id/cal_btn_dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_dot_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_0_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_equal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_equal_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+
+        <Button
+            android:id="@+id/cal_btn_divid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="1dp"
+            android:text="@string/cal_btn_divid_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@drawable/calculator_btn_selector_background_style" />
+    </LinearLayout>
+    <!-- Row 6 -->
+
+
+
+</GridLayout>

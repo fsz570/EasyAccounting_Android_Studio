@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Tab colors -->
+    <!--
+    <color name="input_background">#99CCFF</color>
+    <color name="list_background">#FFCC66</color>
+    <color name="chart_background">#339933</color>
+    <color name="setting_background">#C1C1C1</color>
+    -->
+    <color name="activity_background">#0C5B82</color>
+    <color name="setting_background">#BCDCB7</color>
+
+    <!-- Input tab colors -->
+    <color name="input_background_style_solid">#BCDCB7</color>
+    <color name="input_background_style_stroke">#BCDCB7</color>
+
+    <!-- List tab colors -->
+    <color name="list_background_style_solid">#BCDCB7</color>
+    <color name="list_background_style_stroke">#BCDCB7</color>
+
+    <!-- Chart tab colors -->
+    <color name="chart_background_style_solid">#BCDCB7</color>
+    <color name="chart_background_style_stroke">#BCDCB7</color>
+
+    <!-- Setting tab colors -->
+    <color name="setting_background_style_solid">#BCDCB7</color>
+    <color name="setting_background_style_stroke">#BCDCB7</color>
+    <color name="event_setting_background_style_solid">#BCDCB7</color>
+    <color name="event_setting_background_style_stroke">#BCDCB7</color>
+
+    <!-- Input panel colors -->
+    <color name="input_panel_style_solid">#B4D1C6</color>
+    <color name="input_panel_style_stroke">#6AA48F</color>
+    <color name="common_btn_style_solid">#FFA0CFD3</color>
+    <color name="common_btn_style_stroke">#0C5B82</color>
+    <color name="common_btn_pressed_style_solid">#0C5B82</color>
+    <color name="common_btn_pressed_style_stroke">#F9F9F9</color>
+
+    <!-- Query panel colors -->
+    <color name="query_panel_style_solid">#B4D1C6</color>
+    <color name="query_panel_style_stroke">#6AA48F</color>
+    <color name="query_panel_btn_style_solid">#FFA0CFD3</color>
+    <color name="query_panel_btn_style_stroke">#0C5B82</color>
+    <color name="query_panel_btn_pressed_style_solid">#0C5B82</color>
+    <color name="query_panel_btn_pressed_style_stroke">#F9F9F9</color>
+
+    <!-- Calculator panel colors -->
+    <color name="calculator_panel_btn_style_solid">#BCDCB7</color>
+    <color name="calculator_panel_btn_style_stroke">#6AA48F</color>
+    <color name="calculator_panel_btn_pressed_style_solid">#6AA48F</color>
+    <color name="calculator_panel_btn_pressed_style_stroke">#F9F9F9</color>
+
+    <!-- Spinner dropdown item colors -->
+    <color name="spinner_dropdown_style_solid">#6AA48F</color>
+    <color name="spinner_dropdown_style_stroke">#6AA48F</color>
+    <color name="spinner_dropdown_pressed_style_solid">#6AA48F</color>
+    <color name="spinner_dropdown_pressed_style_stroke">#F9F9F9</color>
+
+    <!-- Event toggle button background -->
+    <color name="event_toggle_btn_background_style_solid">#95AD91</color>
+    <color name="event_toggle_btn_checked_background_style_solid">#70C661</color>
+
+    <!-- Command Btn -->
+    <color name="command_btn_style_solid">#A0CFD3</color>
+    <color name="command_btn_style_stroke">#0C5B82</color>
+    <color name="command_btn_pressed_style_solid">#0C5B82</color>
+    <color name="command_btn_pressed_style_stroke">#F9F9F9</color>
+
+    <!-- Setting Btn -->
+    <color name="setting_btn_style_solid">#A0CFD3</color>
+    <color name="setting_btn_style_stroke">#0C5B82</color>
+    <color name="setting_btn_pressed_style_solid">#0C5B82</color>
+    <color name="setting_btn_pressed_style_stroke">#F9F9F9</color>
+    <color name="black_overlay">#66000000</color>
+
+</resources>

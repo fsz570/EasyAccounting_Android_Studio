@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/query_panel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/query_panel_style"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/query_toggle_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="1dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <ToggleButton
+            android:id="@+id/query_day_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/query_panel_toggle_btn_selector_background_style"
+            android:text="@string/query_day_btn_text"
+            android:textColor="@color/toggle_btn_text_color"
+            android:textOff="@string/query_day_btn_text"
+            android:textOn="@string/query_day_btn_text" />
+
+        <ToggleButton
+            android:id="@+id/query_week_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/query_panel_toggle_btn_selector_background_style"
+            android:text="@string/query_week_btn_text"
+            android:textColor="@color/toggle_btn_text_color"
+            android:textOff="@string/query_week_btn_text"
+            android:textOn="@string/query_week_btn_text" />
+
+        <ToggleButton
+            android:id="@+id/query_month_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/query_panel_toggle_btn_selector_background_style"
+            android:text="@string/query_month_btn_text"
+            android:textColor="@color/toggle_btn_text_color"
+            android:textOff="@string/query_month_btn_text"
+            android:textOn="@string/query_month_btn_text" />
+
+        <ToggleButton
+            android:id="@+id/query_year_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/query_panel_toggle_btn_selector_background_style"
+            android:text="@string/query_year_btn_text"
+            android:textColor="@color/toggle_btn_text_color"
+            android:textOff="@string/query_year_btn_text"
+            android:textOn="@string/query_year_btn_text" />
+
+        <ToggleButton
+            android:id="@+id/query_all_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/query_panel_toggle_btn_selector_background_style"
+            android:text="@string/query_all_btn_text"
+            android:textColor="@color/toggle_btn_text_color"
+            android:textOff="@string/query_all_btn_text"
+            android:textOn="@string/query_all_btn_text" />
+    </RadioGroup>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp">
+
+        <ImageButton
+            android:id="@+id/query_left_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:contentDescription="@string/left_btn_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/arrow_left" />
+
+        <ImageButton
+            android:id="@+id/query_today_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:contentDescription="@string/today_btn_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/today_btn" />
+
+        <ImageButton
+            android:id="@+id/query_right_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="3dp"
+            android:layout_toLeftOf="@id/query_today_btn"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:contentDescription="@string/right_btn_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/arrow_right" />
+
+        <TextView
+            android:id="@+id/query_duration_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/query_left_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="false"
+            android:layout_gravity="center_horizontal|fill_horizontal|center"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@id/query_right_btn"
+            android:layout_toRightOf="@id/query_left_btn"
+            android:elegantTextHeight="false"
+            android:text="@string/default_date"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:stretchColumns="1">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/query_event_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/event_spinner_text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_gravity="center_vertical|left" />
+
+            <Spinner
+                android:id="@+id/query_event_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="3"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/query_category_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_gravity="center_vertical|left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/category_spinner_text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Spinner
+                android:id="@+id/query_category_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="3"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

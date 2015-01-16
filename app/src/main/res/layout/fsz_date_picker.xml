@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="1">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/left_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:contentDescription="@string/left_btn_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/arrow_left" />
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal|fill_horizontal|center"
+            android:text="@string/default_date"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageButton
+            android:id="@+id/right_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:contentDescription="@string/right_btn_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/arrow_right" />
+
+        <ImageButton
+            android:id="@+id/calendar_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/query_panel_btn_selector_background_style"
+            android:contentDescription="@string/calendar_btn_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/calendar"
+            android:layout_marginRight="3dp" />
+    </TableRow>
+</merge>

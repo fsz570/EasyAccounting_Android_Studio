@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/list_background_style"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <requestFocus />
+
+    <include layout="@layout/query_panel_layout" />
+
+    <Button
+        android:id="@+id/query_hide_btn"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/hide_show_btn_up"
+        android:text="@string/query_hide_btn_text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/holo_orange_dark" />
+
+    <ListView
+        android:id="@+id/transaction_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:divider="@drawable/list_divider" />
+
+</LinearLayout>

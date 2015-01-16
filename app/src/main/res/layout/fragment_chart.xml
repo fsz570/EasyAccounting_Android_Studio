@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/chart_background_style"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <requestFocus />
+
+    <include
+        android:id="@+id/chart_query_panel"
+        layout="@layout/query_panel_layout" />
+
+    <Button
+        android:id="@+id/query_hide_btn"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/chart_query_panel"
+        android:text="@string/query_hide_btn_text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:background="@drawable/hide_show_btn_up" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/query_hide_btn" />
+
+</RelativeLayout>

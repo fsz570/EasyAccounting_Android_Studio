@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fsz570.easyaccounting.HelpActivity">
+
+    <ImageView
+        android:id="@+id/help_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:background="@drawable/empty_background_36x36_96" />
+
+    <ImageView
+        android:id="@+id/help_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/help_1"
+        android:gravity="center"
+        android:background="@drawable/empty_background_36x36_96" />
+
+    <ImageView
+        android:id="@+id/help_3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/help_2"
+        android:gravity="center"
+        android:background="@drawable/empty_background_36x36_96" />
+
+    <ImageView
+        android:id="@+id/help_4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/help_3"
+        android:gravity="center"
+        android:background="@drawable/empty_background_36x36_96" />
+
+    <ImageView
+        android:id="@+id/help_5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/help_4"
+        android:gravity="center"
+        android:background="@drawable/empty_background_36x36_96" />
+
+</RelativeLayout>

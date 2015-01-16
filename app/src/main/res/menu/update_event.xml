@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.fsz570.easyaccounting.UpdateEvent2Activity" >
+
+
+    
+    <item
+        android:id="@+id/action_new_event"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/action_new_event_title"/>
+
+</menu>

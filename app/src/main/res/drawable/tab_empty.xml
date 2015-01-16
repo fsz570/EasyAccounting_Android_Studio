@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	
+	<item
+		android:state_selected="false"
+		android:drawable="@drawable/tab_empty_background_disable" />
+	
+	<item 
+		android:drawable="@drawable/tab_empty_background_enable" />
+</selector>

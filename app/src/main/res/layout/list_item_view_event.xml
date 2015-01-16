@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/event_setting_background_style_solid"
+    android:paddingBottom="5dp">
+
+    <ToggleButton
+        android:id="@+id/toggle_button_event_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="2dp"
+        android:drawableTop="@drawable/btn_on_off"
+        android:text="@string/setting_btn_event_enable_text"
+        android:textOff="@string/setting_btn_event_disable_text"
+        android:textOn="@string/setting_btn_event_enable_text"
+        android:textSize="12dp"
+        android:background="@drawable/event_toggle_btn_selector_background_style"
+        android:textColor="@android:color/holo_orange_dark" />
+    
+    <ImageButton
+        android:id="@+id/btn_event_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/toggle_button_event_enable"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@+id/btn_event_confirm"
+        android:src="@drawable/btn_cancel"
+        android:background="@drawable/query_panel_btn_selector_background_style"
+        android:visibility="gone" />
+    
+    <ImageButton
+        android:id="@+id/btn_event_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/toggle_button_event_enable"
+        android:layout_marginLeft="3dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/btn_confirm"
+        android:background="@drawable/query_panel_btn_selector_background_style"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/text_view_event_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/toggle_button_event_enable"
+        android:layout_toRightOf="@+id/toggle_button_event_enable"
+        android:layout_toLeftOf="@+id/btn_event_cancel"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/edit_text_new_event"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_centerVertical="true" />
+
+    <EditText
+        android:id="@+id/edit_text_event_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/toggle_button_event_enable"
+        android:layout_toRightOf="@+id/toggle_button_event_enable"
+        android:layout_toLeftOf="@+id/btn_event_cancel"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:inputType="text"
+        android:text="@string/edit_text_new_event"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
+
+
+
+</RelativeLayout>

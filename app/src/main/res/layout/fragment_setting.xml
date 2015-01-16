@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/setting_background_style"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:id="@+id/setting_layout_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector_background_style"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_event"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/setting_btn_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@string/setting_btn_event_text"
+                android:textColor="@android:color/white"
+                android:background="@drawable/empty_background_36x36_96"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/setting_layout_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector_background_style"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_category"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/setting_btn_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@string/setting_btn_category_text"
+                android:textColor="@android:color/white"
+                android:background="@drawable/empty_background_36x36_96" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/setting_layout_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector_background_style"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_rate"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/setting_btn_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@string/setting_btn_rate_text"
+                android:textColor="@android:color/white"
+                android:background="@drawable/empty_background_36x36_96" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:id="@+id/setting_layout_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector_background_style"
+            android:orientation="vertical"
+            android:clickable="false"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_empty_96_x_72"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/setting_btn_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@string/setting_btn_help_text"
+                android:textColor="@android:color/white"
+                android:background="@drawable/empty_background_36x36_96"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_background_empty_style"
+            android:orientation="vertical"
+            android:clickable="false"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_empty_96_x_72"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_background_empty_style"
+            android:orientation="vertical"
+            android:clickable="false"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_empty_96_x_72"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

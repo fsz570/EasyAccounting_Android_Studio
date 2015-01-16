@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/category_setting_background_style"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <Button
+        android:id="@+id/update_category_back_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/command_btn_selector_background_style"
+        android:onClick="dismissActivity"
+        android:text="@string/btn_back_text" />
+
+    <ExpandableListView
+        android:id="@+id/updaye_category_expandable_listview"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/update_category_back_btn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+    </ExpandableListView>
+
+</RelativeLayout>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Easy Money</string>
+    <string name="empty"></string>
+    <string name="tab_input">Input</string>
+    <string name="tab_list">List</string>
+    <string name="tab_chart">Chart</string>
+    <string name="tab_setting">Setting</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Common -->
+    <string name="btn_confirm_text">Confirm</string>
+    <string name="btn_cancel_text">Cancel</string>
+    <string name="btn_delete_text">Delete</string>
+    <string name="btn_add_text">Add</string>
+    <string name="btn_back_text">Back</string>
+    <string name="all">All</string>
+    <string name="insert_transaction_success">Add cost successful !</string>
+    <string name="update_transaction_success">Update cost successful !</string>
+    <string name="cancel">Canceled !</string>
+
+    <!-- Input Fragment -->
+    <string name="event_spinner_text">Tag</string>
+    <string name="category_spinner_text">Category</string>
+    <string name="comment">Input comment here</string>
+
+    <!-- Date Picker -->
+    <string name="default_date">2014-01-01</string>
+    <string name="left_btn_desc">-1 Day</string>
+    <string name="right_btn_desc">+1 Day</string>
+    <string name="calendar_btn_desc">Calendar</string>
+
+    <!-- Calculator -->
+    <string name="cal_btn_0_text">0</string>
+    <string name="cal_btn_1_text">1</string>
+    <string name="cal_btn_2_text">2</string>
+    <string name="cal_btn_3_text">3</string>
+    <string name="cal_btn_4_text">4</string>
+    <string name="cal_btn_5_text">5</string>
+    <string name="cal_btn_6_text">6</string>
+    <string name="cal_btn_7_text">7</string>
+    <string name="cal_btn_8_text">8</string>
+    <string name="cal_btn_9_text">9</string>
+    <string name="cal_btn_plus_text">+</string>
+    <string name="cal_btn_minus_text">-</string>
+    <string name="cal_btn_times_text">*</string>
+    <string name="cal_btn_divid_text">/</string>
+    <string name="cal_btn_dot_text">.</string>
+    <string name="cal_btn_equal_text">=</string>
+    <string name="cal_btn_clear_text">C</string>
+    <string name="cal_btn_cancel_text">Cancel</string>
+    <string name="cal_btn_confirm_text">Confirm</string>
+    <string name="cal_btn_insert_text">Add</string>
+
+    <!-- List fragment -->
+    <string name="query_day_btn_text">Day</string>
+    <string name="query_week_btn_text">Week</string>
+    <string name="query_month_btn_text">Month</string>
+    <string name="query_year_btn_text">Year</string>
+    <string name="query_all_btn_text">All</string>
+    <string name="today_btn_desc">Now</string>
+    <string name="del_dialog_title">Delete</string>
+    <string name="btn_del_desc">Delete</string>
+    <string name="btn_edit_desc">Edit</string>
+    <string name="title_activity_update_transaction">Update</string>
+
+    <!-- Chart fragment -->
+    <string name="bar_chart_center_text_format">Total : %s</string>
+
+    <!-- Query panel -->
+    <string name="query_hide_btn_text">Query Panel</string>
+
+    <!-- Setting Fragment -->
+    <!-- Setting Event -->
+    <string name="setting_btn_event_text">Tag</string>
+    <string name="title_activity_update_event">Tag</string>
+    <string name="setting_btn_event_enable_text">Enable</string>
+    <string name="setting_btn_event_disable_text">Disable</string>
+    <string name="action_new_event_title">New Tag</string>
+    <string name="edit_text_new_event">New Tag</string>
+
+    <!-- Setting Category -->
+    <string name="setting_btn_category_text">Category</string>
+    <string name="title_activity_update_category">Category</string>
+    <string name="category_add_parent_button_text">Add Main</string>
+    <string name="category_add_child_button_text">Add Sub</string>
+    <string name="category_up_button_text">Up</string>
+    <string name="category_down_button_text">Down</string>
+    <string name="action_new_category_title">New Category</string>
+    <string name="action_update_category_title">Update Category</string>
+    <string name="edit_text_new_main_category">New Category</string>
+    <string name="edit_text_new_sub_category">New Category</string>
+    <string name="update_category">Update</string>
+    <string name="remove_category">Remove</string>
+
+    <!-- Setting Rate app -->
+    <string name="setting_btn_rate_text">Rate app</string>
+
+    <!-- Setting Help -->
+    <string name="setting_btn_help_text">Help</string>
+    <string name="title_activity_help">Help</string>
+    <string name="help_1">Help 1</string>
+    <string name="help_2">Help 2</string>
+
+    <!-- Initial category data -->
+    <string name="cat_food">Food</string>
+    <string name="cat_food_dine_out">Dine out</string>
+    <string name="cat_food_food_ingredients">Food ingredients</string>
+    <string name="cat_food_drinks">Drinks</string>
+    <string name="cat_clothing">Clothing</string>
+    <string name="cat_housing">Housing</string>
+    <string name="cat_traffic">Traffic</string>
+    <string name="cat_recreation">Recreation</string>
+    <string name="cat_others">Others</string>
+</resources>

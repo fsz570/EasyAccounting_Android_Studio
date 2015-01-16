@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">簡單記帳</string>
+    <string name="empty"></string>
+    <string name="tab_input">花費</string>
+    <string name="tab_list">清單</string>
+    <string name="tab_chart">圖表</string>
+    <string name="tab_setting">設定</string>
+    <string name="action_settings">設定</string>
+
+    <!-- Common -->
+    <string name="btn_confirm_text">確認</string>
+    <string name="btn_cancel_text">取消</string>
+    <string name="btn_delete_text">刪除</string>
+    <string name="btn_add_text">新增</string>
+    <string name="btn_back_text">回前頁</string>
+    <string name="all">全部</string>
+
+    <string name="insert_transaction_success">新增花費成功 !</string>
+    <string name="update_transaction_success">更改花費成功 !</string>
+    <string name="cancel">取消 !</string>
+
+    <!-- Input Fragment -->
+    <string name="event_spinner_text">標籤</string>
+    <string name="category_spinner_text">分類</string>
+    <string name="comment">輸入備註</string>
+
+    <!-- Date Picker -->
+    <string name="default_date">2014-01-01</string>
+    <string name="left_btn_desc">-1 天</string>
+    <string name="right_btn_desc">+1 天</string>
+    <string name="calendar_btn_desc">日曆</string>
+
+    <!-- Calculator -->
+    <string name="cal_btn_0_text">0</string>
+    <string name="cal_btn_1_text">1</string>
+    <string name="cal_btn_2_text">2</string>
+    <string name="cal_btn_3_text">3</string>
+    <string name="cal_btn_4_text">4</string>
+    <string name="cal_btn_5_text">5</string>
+    <string name="cal_btn_6_text">6</string>
+    <string name="cal_btn_7_text">7</string>
+    <string name="cal_btn_8_text">8</string>
+    <string name="cal_btn_9_text">9</string>
+    <string name="cal_btn_plus_text">+</string>
+    <string name="cal_btn_minus_text">-</string>
+    <string name="cal_btn_times_text">*</string>
+    <string name="cal_btn_divid_text">/</string>
+    <string name="cal_btn_dot_text">.</string>
+    <string name="cal_btn_equal_text">=</string>
+    <string name="cal_btn_clear_text">C</string>
+    <string name="cal_btn_cancel_text">取消</string>
+    <string name="cal_btn_confirm_text">確認</string>
+    <string name="cal_btn_insert_text">新增</string>
+
+    <!-- List fragment -->
+    <string name="query_day_btn_text">日</string>
+    <string name="query_week_btn_text">週</string>
+    <string name="query_month_btn_text">月</string>
+    <string name="query_year_btn_text">年</string>
+    <string name="query_all_btn_text">全部</string>
+    <string name="today_btn_desc">現在</string>
+    <string name="del_dialog_title">刪除</string>
+    <string name="btn_del_desc">刪除</string>
+    <string name="btn_edit_desc">編輯</string>
+    <string name="title_activity_update_transaction">更新</string>
+
+    <!-- Chart fragment -->
+    <string name="bar_chart_center_text_format">總花費 : %s</string>
+
+    <!-- Query panel -->
+    <string name="query_hide_btn_text">過濾條件</string>
+
+    <!-- Setting Fragment -->
+    <!-- Setting Event -->
+    <string name="setting_btn_event_text">標籤</string>
+    <string name="title_activity_update_event">標籤</string>
+    <string name="setting_btn_event_enable_text">啟用</string>
+    <string name="setting_btn_event_disable_text">停用</string>
+    <string name="action_new_event_title">新增標籤</string>
+    <string name="edit_text_new_event">按此新增標籤</string>
+
+    <!-- Setting Category -->
+    <string name="setting_btn_category_text">分類</string>
+    <string name="title_activity_update_category">分類</string>
+
+    <string name="category_add_parent_button_text">新增主分類</string>
+    <string name="category_add_child_button_text">新增次分類</string>
+    <string name="category_up_button_text">向上</string>
+    <string name="category_down_button_text">向下</string>
+    <string name="action_new_category_title">新增分類</string>
+    <string name="action_update_category_title">更新分類</string>
+    <string name="edit_text_new_main_category">按此新增主分類</string>
+    <string name="edit_text_new_sub_category">按此新增次分類</string>
+    <string name="update_category">更新</string>
+    <string name="remove_category">刪除</string>
+
+    <!-- Setting Help -->
+    <string name="setting_btn_rate_text">評分</string>
+
+    <!-- Setting Help -->
+    <string name="setting_btn_help_text">使用說明</string>
+    <string name="title_activity_help">使用說明</string>
+    <string name="help_1">使用說明 一</string>
+    <string name="help_2">使用說明 二</string>
+
+    <!-- Initial category data -->
+    <string name="cat_food">食</string>
+    <string name="cat_food_dine_out">外食</string>
+    <string name="cat_food_food_ingredients">食材</string>
+    <string name="cat_food_drinks">飲料</string>
+    <string name="cat_clothing">衣</string>
+    <string name="cat_housing">住</string>
+    <string name="cat_traffic">行</string>
+    <string name="cat_recreation">育樂</string>
+    <string name="cat_others">其它</string>
+</resources>

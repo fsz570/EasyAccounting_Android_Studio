@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center_horizontal|fill_horizontal"
+    android:background="@drawable/input_background_style"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_panel_style"
+            android:stretchColumns="1"
+            android:layout_marginBottom="5dp">
+
+            <TableRow>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:orientation="horizontal">
+
+                    <com.fsz570.ui.fszDatePicker
+                        android:id="@+id/date_picker"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="1">
+                     </com.fsz570.ui.fszDatePicker>
+                </RelativeLayout>
+
+            </TableRow>
+
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/input_event_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/event_spinner_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Spinner
+                    android:id="@+id/input_event_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/input_category_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/category_spinner_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Spinner
+                    android:id="@+id/input_category_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:focusableInTouchMode="true" />
+            </TableRow>
+        </TableLayout>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:editable="false"
+            android:id="@+id/dummy">
+
+        </EditText>
+
+        <include layout="@layout/calculator_layout" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@string/comment"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:layout_marginTop="5dp">
+
+        </TextView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/transaction_item_comment"
+            android:editable="false"
+            android:clickable="false"
+            android:inputType="textAutoComplete"
+            android:hint="@string/comment" />
+
+        <LinearLayout
+            android:id="@+id/cal_table_row_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4" >
+
+            <Button
+                android:id="@+id/cal_btn_insert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/cal_btn_insert_text"
+                android:background="@drawable/command_btn_selector_background_style"
+                android:layout_marginTop="5dp" />
+
+            <Button
+                android:id="@+id/cal_btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/cal_btn_cancel_text"
+                android:visibility="gone"
+                android:background="@drawable/command_btn_selector_background_style"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="2dp" />
+
+            <Button
+                android:id="@+id/cal_btn_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/cal_btn_confirm_text"
+                android:visibility="gone"
+                android:background="@drawable/command_btn_selector_background_style"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="2dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</ScrollView>
