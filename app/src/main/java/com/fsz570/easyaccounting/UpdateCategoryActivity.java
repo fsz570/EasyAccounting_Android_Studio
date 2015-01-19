@@ -13,6 +13,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -39,6 +40,7 @@ public class UpdateCategoryActivity extends Activity {
 	
 	private View lastSelectedView;
 	private int NO_VALUE = -1;
+    private static InputMethodManager imm;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class UpdateCategoryActivity extends Activity {
 
 		initDB();
 		initUi();
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 
 	private void initUi() {
@@ -249,8 +252,23 @@ public class UpdateCategoryActivity extends Activity {
 	        final boolean isUpdate = getArguments().getBoolean("isUpdate");
 	        final CategoryVo originalCategoryVo = getArguments().getParcelable("originalCategoryVo");
 	        
-	        EditText categoryNameEditText = new EditText(getActivity());
+	        final EditText categoryNameEditText = new EditText(getActivity());
 	        categoryNameEditText.setId(CategoryVo.UPDATE_CATEGORY_TEXT_ID); //Not make any sense, just need a int here
+
+            categoryNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        categoryNameEditText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                imm.showSoftInput(categoryNameEditText, InputMethodManager.SHOW_IMPLICIT);
+                                categoryNameEditText.selectAll();
+                            }
+                        });
+                    }
+                }
+            });
 
 	        //If add Group Category
 	        if(!isUpdate && !isChild){
@@ -297,7 +315,7 @@ public class UpdateCategoryActivity extends Activity {
 		    //If update Category
 	        }else if(isUpdate){
 	        	categoryNameEditText.setText(originalCategoryVo.getTranCategoryName());
-	        	
+
 	        	return new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setView(categoryNameEditText)
