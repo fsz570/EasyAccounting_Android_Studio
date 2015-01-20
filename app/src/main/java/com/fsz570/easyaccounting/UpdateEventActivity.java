@@ -1,18 +1,16 @@
 package com.fsz570.easyaccounting;
 
-import java.util.List;
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.ListItemEventAdapter;
 import com.fsz570.easyaccounting.vo.EventVo;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
+import java.util.List;
 
 public class UpdateEventActivity extends Activity {
 
@@ -45,14 +43,6 @@ public class UpdateEventActivity extends Activity {
 
 		listView = (ListView) findViewById(R.id.update_event_list_view);
 		listView.setAdapter(listItemAdapter);
-
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapter, View view,
-					int position, long id) {
-				view.setTag(listItemAdapter.getItem(position));
-			}
-		});
 	}
 	
 	

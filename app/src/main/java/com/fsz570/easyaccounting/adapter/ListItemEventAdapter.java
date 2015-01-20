@@ -59,31 +59,29 @@ public class ListItemEventAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
-		ListItemEventHolder holder;
-		
-		Log.d(TAG, "getView()");
-		
+        ListItemEventHolder holder;
+
+        EventVo tmp = (EventVo)mList.get(position);
+        Log.d(TAG, "getView() position : " + position + "; Event : " + tmp.getEventName());
+
 		if(null == view){
             view = mLayoutInflater.inflate(R.layout.list_item_view_event, null);
-            holder = new ListItemEventHolder();
-            holder.setEnableButton((ToggleButton) view.findViewById(R.id.toggle_button_event_enable));
-            holder.setEventNameTextView((TextView) view.findViewById(R.id.text_view_event_name));
-            holder.setEventNameEditText((EditText) view.findViewById(R.id.edit_text_event_name));
-            holder.setCancelButton((ImageButton) view.findViewById(R.id.btn_event_cancel));
-            holder.setConfirmButton((ImageButton) view.findViewById(R.id.btn_event_confirm));
-            
-            view.setTag(holder);
+
+            holder = initHolder(view);
         }else{
             holder = (ListItemEventHolder) view.getTag();
         }
-		
-		Log.d(TAG, "position : " + position);
-		EventVo tmp = (EventVo)mList.get(position);
-		
+
 		if(tmp.getId() == EventVo.NEW_EVENT_ID){
 			holder.getEnableButton().setVisibility(View.GONE);
 		}else{
+            //If reuse the view of NEW_EVENT_ID
+            if(holder.getEnableButton().getVisibility() == View.GONE) {
+                holder.getEnableButton().setVisibility(View.VISIBLE);
+            }
 			Log.d(TAG, "tmp.isEnabled() : " + tmp.isEnabled());
+            //Remove OnCheckedChangeListener first to avoid trigger it by default value
+            holder.getEnableButton().setOnCheckedChangeListener(null);
 			holder.getEnableButton().setChecked(tmp.isEnabled());
 			holder.getEnableButton().setTag(tmp);
 			holder.getEnableButton().setOnCheckedChangeListener(checkedChangeListener);
@@ -144,6 +142,20 @@ public class ListItemEventAdapter extends BaseAdapter {
 		}
 		return view;
 	}
+
+    private ListItemEventHolder initHolder(View view){
+        ListItemEventHolder holder = new ListItemEventHolder();
+
+        holder.setEnableButton((ToggleButton) view.findViewById(R.id.toggle_button_event_enable));
+        holder.setEventNameTextView((TextView) view.findViewById(R.id.text_view_event_name));
+        holder.setEventNameEditText((EditText) view.findViewById(R.id.edit_text_event_name));
+        holder.setCancelButton((ImageButton) view.findViewById(R.id.btn_event_cancel));
+        holder.setConfirmButton((ImageButton) view.findViewById(R.id.btn_event_confirm));
+
+        view.setTag(holder);
+
+        return holder;
+    }
 	
 	// Click Listener for all buttons
 	private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -163,36 +175,8 @@ public class ListItemEventAdapter extends BaseAdapter {
 				//Set current editingEventVo
 				editingEventVo = (EventVo)v.getTag();
 				editingEventVo.setEditing(true);
-//
-//                RelativeLayout viewParent = (RelativeLayout)v.getParent();
-//                ToggleButton enableButton =  (ToggleButton)viewParent.findViewById(R.id.toggle_button_event_enable);
-//                TextView eventNameTextView =(TextView) viewParent.findViewById(R.id.text_view_event_name);
-//                EditText eventNameEditText = (EditText) viewParent.findViewById(R.id.edit_text_event_name);
-//                ImageButton cancelButton = (ImageButton) viewParent.findViewById(R.id.btn_event_cancel);
-//                ImageButton confirmButton = (ImageButton) viewParent.findViewById(R.id.btn_event_confirm);
-//
-//                if(editingEventVo.getId() == EventVo.NEW_EVENT_ID){
-//                    enableButton.setVisibility(View.GONE);
-//                }
-//
-//                eventNameTextView.setVisibility(View.GONE);
-//
-//                cancelButton.setEnabled(true);
-//                cancelButton.setVisibility(View.VISIBLE);
-//                cancelButton.setFocusable(false);
-//
-//                confirmButton.setEnabled(true);
-//                confirmButton.setVisibility(View.VISIBLE);
-//                confirmButton.setFocusable(false);
-//
-//                eventNameEditText.setEnabled(true);
-//                eventNameEditText.setVisibility(View.VISIBLE);
-//                eventNameEditText.setFocusableInTouchMode(true);
-//                eventNameEditText.requestFocus();
-//                //imm.showSoftInput(eventNameEditText, InputMethodManager.SHOW_IMPLICIT);
 
 				notifyDataSetChanged();
-
 				break;
 			case R.id.btn_event_cancel: 
 				Log.d(TAG, "onClick cancel()");
@@ -200,7 +184,6 @@ public class ListItemEventAdapter extends BaseAdapter {
 				editingEventVo = null;
 				
 				imm.hideSoftInputFromWindow(editingEditText.getWindowToken(), 0);
-				notifyDataSetChanged();
 				break;
 			case R.id.btn_event_confirm: 		
 				Log.d(TAG, "onClick confirm()");
@@ -215,7 +198,6 @@ public class ListItemEventAdapter extends BaseAdapter {
 				setDataSource(parentActivity.getEventAllData(true));
 				break;
 			}
-
 		}
 	};
 	
@@ -230,6 +212,7 @@ public class ListItemEventAdapter extends BaseAdapter {
 				
 				((EventVo)v.getTag()).setEnabled(isChecked?EventVo.ENABLED:EventVo.DISABLED);
 				parentActivity.getDbAdapter().setEventEnable(((EventVo)v.getTag()).getId(), isChecked?EventVo.ENABLED:EventVo.DISABLED);
+                //notifyDataSetChanged();
 				break;
 			}
 	    }
@@ -243,7 +226,4 @@ public class ListItemEventAdapter extends BaseAdapter {
 		
 		notifyDataSetChanged();
 	}
-
-
-
 }
