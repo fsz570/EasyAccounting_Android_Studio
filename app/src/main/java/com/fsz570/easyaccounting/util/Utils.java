@@ -214,4 +214,8 @@ public class Utils {
         a.setInterpolator(new LinearInterpolator());
         v.startAnimation(a);
     }
+
+    public static boolean isContainOnlyZeroAndDot(String value){
+        return value.replaceAll("0", "").replaceAll(".","").length() == 0;
+    }
 }

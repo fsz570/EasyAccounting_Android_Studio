@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.util.Calculator;
+import com.fsz570.easyaccounting.util.Consts;
 import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 import com.fsz570.easyaccounting.vo.EventVo;
@@ -203,7 +204,16 @@ public class UpdateTransactionActivity extends Activity {
 		                    // ERROR PREVENTION
 		                    // Eliminate entering multiple decimals
 		                } else {
-		                	calCalculationInput.append(buttonPressed);
+                            //calCalculationInput.append(buttonPressed);
+                            StringBuffer tmpBuf = new StringBuffer(calCalculationInput.getText().toString().replaceAll(",", ""));
+                            tmpBuf.append(buttonPressed);
+
+                            //Avoid parseDouble eat the input of "0."
+                            if(Utils.isContainOnlyZeroAndDot(tmpBuf.toString())) {
+                                calCalculationInput.setText(tmpBuf.toString());
+                            }else{
+                                calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(tmpBuf.toString())));
+                            }
 		                }
 		 
 		            } else {
@@ -214,7 +224,7 @@ public class UpdateTransactionActivity extends Activity {
 		                    // before the decimal
 		                	calCalculationInput.setText(0 + buttonPressed);
 		                } else {
-		                	calCalculationInput.setText(buttonPressed);
+                            calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(buttonPressed)));
 		                }
 		 
 		                userIsInTheMiddleOfTypingANumber = true;
@@ -281,7 +291,7 @@ public class UpdateTransactionActivity extends Activity {
 		Log.d(TAG, "genTransVo()");
 			
 		try{
-			double tranAmount = Double.parseDouble(calCalculationInput.getText().toString());
+            double tranAmount = Double.parseDouble(calCalculationInput.getText().toString().replaceAll(",",""));
 			
 			TextView dateText = (TextView)findViewById(R.id.date_text);
 			dateStr = dateText.getText().toString();
@@ -302,12 +312,21 @@ public class UpdateTransactionActivity extends Activity {
 	}
 	
 	public int getInputEventId(){
-		Spinner eventSpinner = (Spinner)findViewById(R.id.input_event_spinner);
-		return ((EventVo)eventSpinner.getSelectedItem()).getId();
+		//Spinner eventSpinner = (Spinner)findViewById(R.id.input_event_spinner);
+        EventVo eventVo = (EventVo) eventSpinner.getSelectedItem();
+        if (eventVo == null) {
+            return Consts.NO_EVENT_ID;
+        } else {
+            return eventVo.getId();
+        }
 	}
 	
 	public int getInputCategoryId(){
-		Spinner categorySpinner = (Spinner)findViewById(R.id.input_category_spinner);
-		return ((CategoryVo)categorySpinner.getSelectedItem()).getId();
+        CategoryVo categoryVo = (CategoryVo)categorySpinner.getSelectedItem();
+        if (categoryVo == null) {
+            return Consts.NO_CATEGORY_ID;
+        } else {
+            return categoryVo.getId();
+        }
 	}
 }

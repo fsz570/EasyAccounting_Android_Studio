@@ -162,7 +162,13 @@ public class InputFragment extends Fragment {
                             //calCalculationInput.append(buttonPressed);
                             StringBuffer tmpBuf = new StringBuffer(calCalculationInput.getText().toString().replaceAll(",", ""));
                             tmpBuf.append(buttonPressed);
-                            calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(tmpBuf.toString())));
+
+                            //Avoid parseDouble eat the input of "0."
+                            if(Utils.isContainOnlyZeroAndDot(tmpBuf.toString())) {
+                                calCalculationInput.setText(tmpBuf.toString());
+                            }else{
+                                calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(tmpBuf.toString())));
+                            }
 		                }
 		 
 		            } else {
@@ -222,7 +228,7 @@ public class InputFragment extends Fragment {
 		
 		return false;
 	}
-	
+
 	private TransactionVo genTransVo(){
 		
 		Log.d(TAG, "genTransVo()");
