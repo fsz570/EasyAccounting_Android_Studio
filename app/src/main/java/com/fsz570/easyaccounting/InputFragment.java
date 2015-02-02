@@ -58,13 +58,20 @@ public class InputFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
- 
+        Log.d(TAG, "onCreateView()");
     	parentActivity = ((AccountingActivity)getActivity());
         rootView = inflater.inflate(R.layout.fragment_input, container, false);
         
-        initInput();
+//        initInput();
          
         return rootView;
+    }
+
+    @Override
+    public void onStart(){
+        Log.d(TAG, "onStart()");
+        super.onStart();
+        initInput();
     }
     
 	private void initInput(){

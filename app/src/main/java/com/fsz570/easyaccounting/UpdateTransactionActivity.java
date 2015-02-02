@@ -65,9 +65,26 @@ public class UpdateTransactionActivity extends Activity {
 		
 		transVo = (TransactionVo)getIntent().getParcelableExtra(TransactionVo.TRANSACTION_VO_NAME);
 		
-		initDB();
-		initInput();
+		//initDB();
+//		initInput();
 	}
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        initDB();
+        initInput();
+    }
+
+    @Override
+    protected void onStop(){
+
+        if(dbAdapter != null){
+            dbAdapter.close();
+        }
+        super.onStop();
+    }
 	
 	private void initDB(){
 		Log.d(TAG, "initDB() start");
@@ -77,12 +94,12 @@ public class UpdateTransactionActivity extends Activity {
         // code that needs 6 seconds for execution
         try{
         	dbAdapter.createDataBase();
-
+            dbAdapter.openDataBase();
         }catch(Exception e){
         	Log.d(TAG, "initDB() Exception");
         	Log.d(TAG, e.getMessage());
         }finally{
-        	dbAdapter.close();	
+        	//dbAdapter.close();
         }
         // after finishing, close the progress bar
         Log.d(TAG, "initDB() end.");

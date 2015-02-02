@@ -94,11 +94,17 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 
 	public void openDataBase() throws SQLException {
-		// Open the database
-		//String myPath = DB_PATH + DB_NAME;
-		String myPath = DB_PATH;
-		theDataBase = SQLiteDatabase.openDatabase(myPath, null,
-				SQLiteDatabase.OPEN_READWRITE);
+        Log.d(TAG, "openDataBase()");
+        // Open the database
+        //String myPath = DB_PATH + DB_NAME;
+        String myPath = DB_PATH;
+
+        //If null or not open
+        if(null == theDataBase || (null != theDataBase && !theDataBase.isOpen())){
+            theDataBase = SQLiteDatabase.openDatabase(myPath, null,
+                    SQLiteDatabase.OPEN_READWRITE);
+        }
+        Log.d(TAG, "theDataBase null ? " + (theDataBase==null));
 	}
 
 	@Override
@@ -236,7 +242,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return events;
 	}
@@ -252,7 +258,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.update(EVENT_TABLE, cv, " _id = ? ", new String[]{String.valueOf(eventId)});
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
 	}
 	
 	public void deleteEvent(int eventId){
@@ -266,7 +272,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.delete(EVENT_TABLE, " _id = ? ", new String[]{String.valueOf(eventId)});
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
 	}
 	
 	public void newEvent(String newEventName){
@@ -281,7 +287,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.insert(EVENT_TABLE, null, cv);
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
 	}
 	
 	public int newParentCategory(String newCategoryName){
@@ -296,7 +302,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
         return (int)rowId;
 	}
 	
@@ -313,7 +319,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
 	}
 	
 	public void updateCategory(int id, String newCategoryName){
@@ -326,7 +332,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		
 		theDataBase.update(CATEGORY_TABLE, cv, " _id = ? ", new String[]{String.valueOf(id)});
 
-		close();
+		//close();
 	}
 	
 	private int getMaxSeq(){
@@ -341,7 +347,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	    }
 
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return maxSeq;
 	}
@@ -358,7 +364,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	    }
 
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return maxSeq;
 	}
@@ -381,7 +387,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return events;
 	}
@@ -397,7 +403,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.update(EVENT_TABLE, cv, " _id = ? ", new String[]{String.valueOf(eventId)});
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
 	}
 
 	public List<CategoryVo> getCategories(){
@@ -431,7 +437,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return categoryList;
 	}
@@ -452,7 +458,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 	    
 	    return listCategory;
 	}
@@ -484,7 +490,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return trans;
 	}
@@ -520,7 +526,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return trans;
 	}
@@ -556,7 +562,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return trans;
 	}
@@ -589,7 +595,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	    // closing connection
 	    cursor.close();
-	    close();
+	    //close();
 		
 		return trans;
 	}
@@ -609,7 +615,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.insertOrThrow(TRANS_TABLE, null, cv);
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
 	}
 	
 	public void updateTrans(TransactionVo transVo){
@@ -627,7 +633,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.update(TRANS_TABLE, cv, " _id = ? ", new String[]{transVo.getId()+""});
 		Log.d(TAG, "rowId : " + rowId);
 
-		close();
+		//close();
 	}
 	
 	private String getQueryTransactionString(int eventId, int categoryId){
@@ -730,7 +736,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	public void deleteTransaction(TransactionVo transVo){
 		openDataBase();
 		theDataBase.delete("T_HIS_TRAN", " _id = ? ", new String[] {transVo.getId()+""});
-		close();
+		//close();
 	}
 	
 	public void updateCategory(int id, int seq){
@@ -743,7 +749,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		
 		long rowId = theDataBase.update(CATEGORY_TABLE, cv, " _id = ? ", new String[]{id+""});
 
-		close();
+		//close();
 	}
 	
 	private String getCommonCategorySql() {

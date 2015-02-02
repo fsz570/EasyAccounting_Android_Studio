@@ -76,9 +76,15 @@ public class ChartFragment extends Fragment {
 		sdf = new SimpleDateFormat("yyyy-MM-dd");
 		queryPanel = ((LinearLayout)rootView.findViewById(R.id.chart_query_panel));
 
-		initUI();
+//		initUI();
 
 		return rootView;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        initUI();
     }
  
     private void initUI(){

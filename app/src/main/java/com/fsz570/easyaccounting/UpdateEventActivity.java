@@ -27,9 +27,26 @@ public class UpdateEventActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_update_event);
 
-		initDB();
-		initUi();
+		//initDB();
+//		initUi();
 	}
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        initDB();
+        initUi();
+    }
+
+    @Override
+    protected void onStop(){
+
+        if(dbAdapter != null){
+            dbAdapter.close();
+        }
+        super.onStop();
+    }
 	
 	private void initUi() {
 		initListView();
@@ -73,12 +90,12 @@ public class UpdateEventActivity extends Activity {
 		// code that needs 6 seconds for execution
 		try {
 			dbAdapter.createDataBase();
-
+            dbAdapter.openDataBase();
 		} catch (Exception e) {
 			Log.d(TAG, "initDB() Exception");
 			Log.d(TAG, e.getMessage());
 		} finally {
-			dbAdapter.close();
+			//dbAdapter.close();
 		}
 		// after finishing, close the progress bar
 		Log.d(TAG, "initDB() end.");

@@ -50,6 +50,7 @@ public class AccountingActivity extends FragmentActivity implements
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
@@ -57,10 +58,27 @@ public class AccountingActivity extends FragmentActivity implements
 
         setContentView(R.layout.activity_accounting);
 
-        initDB();
+        //initDB();
         initUI();
     	
 	}
+
+    @Override
+    protected void onStart(){
+        Log.d(TAG, "onStart()");
+        super.onStart();
+
+        initDB();
+    }
+
+    @Override
+    protected void onStop(){
+
+        if(dbAdapter != null){
+            dbAdapter.close();
+        }
+        super.onStop();
+    }
 
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
@@ -154,13 +172,18 @@ public class AccountingActivity extends FragmentActivity implements
         // code that needs 6 seconds for execution
         try{
         	dbAdapter.createDataBase();
+            dbAdapter.openDataBase();
             initData();
 
         }catch(Exception e){
         	Log.d(TAG, "initDB() Exception");
-        	Log.d(TAG, e.getMessage());
+            if(e.getMessage() !=null) {
+                Log.d(TAG, e.getMessage());
+            }else{
+                e.printStackTrace();
+            }
         }finally{
-        	dbAdapter.close();	
+        	//dbAdapter.close();
         }
         // after finishing, close the progress bar
         Log.d(TAG, "initDB() end.");

@@ -86,11 +86,17 @@ public class ListFragment extends Fragment {
 		sdf = new SimpleDateFormat("yyyy-MM-dd");
 		queryPanel = ((LinearLayout)rootView.findViewById(R.id.query_panel));
 
-        initUI();
+//        initUI();
 
 
 		return rootView;
 	}
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        initUI();
+    }
 
     private void initUI() {
         Log.d(TAG, "initUI()");
@@ -548,7 +554,7 @@ public class ListFragment extends Fragment {
                 Log.d(TAG, "initDB() Exception");
                 Log.d(TAG, e.getMessage());
             }finally{
-                dbAdapter.close();
+                //dbAdapter.close();
             }
 
             if(lastCheckedBtnId == R.id.query_all_btn){
