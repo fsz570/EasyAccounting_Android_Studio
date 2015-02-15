@@ -96,8 +96,14 @@
     <string name="update_category">更新</string>
     <string name="remove_category">刪除</string>
 
-    <!-- Setting Help -->
+    <!-- Setting Rate app -->
     <string name="setting_btn_rate_text">評分</string>
+
+    <!-- Setting Budget -->
+    <string name="setting_btn_budget_text">預算</string>
+    <string name="title_activity_update_budget">預算</string>
+    <string name="monthly_budget_text">月預算</string>
+    <string name="update_budget_success">更新預算成功!</string>
 
     <!-- Setting Help -->
     <string name="setting_btn_help_text">使用說明</string>

@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.ListItemAdapter;
 import com.fsz570.easyaccounting.util.Consts;
 import com.fsz570.easyaccounting.util.Utils;
@@ -45,7 +44,6 @@ public class ListFragment extends Fragment {
 	private static final String TAG = "ListFragment";
 	private static final int NO_CHECKED_BUTTON = -1;
 
-	
 	private View rootView;
 	private AccountingActivity parentActivity;
 
@@ -86,23 +84,19 @@ public class ListFragment extends Fragment {
 		sdf = new SimpleDateFormat("yyyy-MM-dd");
 		queryPanel = ((LinearLayout)rootView.findViewById(R.id.query_panel));
 
-//        initUI();
-
-
 		return rootView;
 	}
 
     @Override
-    public void onStart(){
-        super.onStart();
-        initUI();
+    public void onResume(){
+        super.onResume();
+        initUi();
     }
 
-    private void initUI() {
-        Log.d(TAG, "initUI()");
+    private void initUi() {
+        Log.d(TAG, "initUi()");
 
         initQueryPanel();
-
         initEventSpinner();
         initCategorySpinner();
         initListView();
@@ -110,7 +104,6 @@ public class ListFragment extends Fragment {
         rootView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.d(TAG, "setOnFocusChangeListener() hasFocus : " + hasFocus);
                 if(hasFocus) {
                     if(lastCheckedBtnId==NO_CHECKED_BUTTON){
                         queryDayBtn.setChecked(true);
@@ -178,13 +171,9 @@ public class ListFragment extends Fragment {
 				.findViewById(R.id.query_event_spinner);
 
 		List<EventVo> events = parentActivity.getDbAdapter().getEnabledEvents();
-//		ArrayAdapter<EventVo> dataAdapter = new ArrayAdapter<EventVo>(
-//				((AccountingActivity) getActivity()),
-//				android.R.layout.simple_spinner_item, events);
-//		dataAdapter
-//				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         ArrayAdapter<EventVo> dataAdapter = new ArrayAdapter<EventVo>(
-                ((AccountingActivity) getActivity()),
+                parentActivity,
                 R.layout.simple_spinner_item, events);
         dataAdapter
                 .setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
@@ -198,13 +187,9 @@ public class ListFragment extends Fragment {
 					View selectedItemView, int position, long id) {
 				EventVo eventVo = (EventVo) eventSpinner
 						.getItemAtPosition(position);
-				Log.d(TAG, "OnItemSelectedListener : " + eventVo.getEventName());
 
                 getItemLists gfl = new getItemLists();
                 gfl.execute();
-//				listItemAdapter
-//						.setDataSource(getTransactionDataWithCondition(eventVo
-//								.getId(), getCategoryId()));
 			}
 
 			@Override
@@ -225,10 +210,7 @@ public class ListFragment extends Fragment {
 		
 		categoryList.add(0, new CategoryVo(Consts.NO_CATEGORY_ID, Consts.NO_CATEGORY_ID, "",
 			null, 0));
-		
-//		ArrayAdapter<CategoryVo> dataAdapter = new ArrayAdapter<CategoryVo>(parentActivity,
-//			    android.R.layout.simple_spinner_item, categoryList);
-//		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         ArrayAdapter<CategoryVo> dataAdapter = new ArrayAdapter<CategoryVo>(parentActivity,
                 R.layout.simple_spinner_item, categoryList);
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
@@ -242,13 +224,9 @@ public class ListFragment extends Fragment {
 					View selectedItemView, int position, long id) {
 				CategoryVo categoryVo = (CategoryVo) categorySpinner
 						.getItemAtPosition(position);
-				Log.d(TAG, "OnItemSelectedListener : " + categoryVo.getTranCategoryName());
-
                 getItemLists gfl = new getItemLists();
                 gfl.execute();
-//				listItemAdapter
-//						.setDataSource(getTransactionDataWithCondition(getEventId(), categoryVo
-//								.getId()));
+
 			}
 
 			@Override
@@ -366,14 +344,10 @@ public class ListFragment extends Fragment {
 				
 				if(QUERY_PANEL_HIDE){
 					Utils.expandHeight(queryPanel, 3);
-					//params.height=LayoutParams.WRAP_CONTENT ;
-					//queryPanel.setLayoutParams(params);
 					QUERY_PANEL_HIDE = false;
 					queryHideBtn.setBackgroundResource(R.drawable.hide_show_btn_up);
 				}else{
 					Utils.collapseHeight(queryPanel, 3);
-					//params.height=0 ;
-					//queryPanel.setLayoutParams(params);
 					QUERY_PANEL_HIDE = true;
 					queryHideBtn.setBackgroundResource(R.drawable.hide_show_btn_down);
 				}
@@ -386,7 +360,6 @@ public class ListFragment extends Fragment {
 
 				intent.putExtra(TransactionVo.TRANSACTION_VO_NAME, (TransactionVo)v.getTag());
 				startActivityForResult(intent, Consts.ACTIVITY_REQUEST_CODE_FOR_UPDATE_TRANSACTION);
-				
 				break;
 			}
 			
@@ -515,17 +488,6 @@ public class ListFragment extends Fragment {
 		// After range or backward|forward, renew data source of list
         getItemLists gfl = new getItemLists();
         gfl.execute();
-		//listItemAdapter.setDataSource(getTransactionData());
-	}
-
-	private List<TransactionVo> getTransactionDataWithCondition(int eventId, int categoryId) {
-		Log.d(TAG, "getTransactionDataWithEventId()");
-
-		if(lastCheckedBtnId == R.id.query_all_btn){
-			return parentActivity.queryTransWithDateRange(startDateStr, getEndDate(), eventId, categoryId);
-		}else{
-			return parentActivity.queryTransWithDateRange(startDateStr, getEndDate(), eventId, categoryId);
-		}
 	}
 
     private class getItemLists extends
@@ -542,25 +504,10 @@ public class ListFragment extends Fragment {
 
         @Override
         protected List<TransactionVo> doInBackground(Void... params) {
-            DBAdapter dbAdapter = null;
-            //Instant the DB Adapter will create the DB is it not exist.
-            dbAdapter = new DBAdapter(parentActivity);
-
-            // code that needs 6 seconds for execution
-            try{
-                dbAdapter.createDataBase();
-
-            }catch(Exception e){
-                Log.d(TAG, "initDB() Exception");
-                Log.d(TAG, e.getMessage());
-            }finally{
-                //dbAdapter.close();
-            }
-
             if(lastCheckedBtnId == R.id.query_all_btn){
-                return dbAdapter.getTransactionsWithCondition(getEventId(), getCategoryId());
+                return parentActivity.getTransactionsWithCondition(getEventId(), getCategoryId());
             }else{
-                return dbAdapter.getTransactions(startDateStr, getEndDate(),
+                return parentActivity.getTransactions(startDateStr, getEndDate(),
                         getEventId(), getCategoryId());
             }
         }
@@ -612,8 +559,6 @@ public class ListFragment extends Fragment {
 	}
 
 	private String getEndDate() {
-		Log.d(TAG, "getEndDate()");
-
 		Date date;
 		Calendar cal = new GregorianCalendar();
 
@@ -724,9 +669,7 @@ public class ListFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		Log.d(TAG, "ListFragment.onActivityResult()");
-		
+
 		// matches the result code passed from ChildActivity
 		if (requestCode == Consts.ACTIVITY_REQUEST_CODE_FOR_UPDATE_TRANSACTION) {
 			if (resultCode == Activity.RESULT_CANCELED) {
@@ -739,6 +682,4 @@ public class ListFragment extends Fragment {
 		}
 	}
 
-
-	
 }

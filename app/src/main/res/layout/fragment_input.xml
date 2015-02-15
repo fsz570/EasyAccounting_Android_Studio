@@ -12,12 +12,42 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:id="@+id/budget_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
+            <ImageView
+                android:id="@+id/iv_budget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/budget_bar" />
+            <ImageView
+                android:id="@+id/iv_expense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/budget_expense_bar" />
+            <TextView
+                android:id="@+id/tv_budget_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/iv_budget"
+                android:text="expense/budget"
+                android:textAlignment="center"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
         <TableLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/input_panel_style"
             android:stretchColumns="1"
-            android:layout_marginBottom="5dp">
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp">
 
             <TableRow>
                 <RelativeLayout

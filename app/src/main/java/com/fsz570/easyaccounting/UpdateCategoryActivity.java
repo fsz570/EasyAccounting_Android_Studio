@@ -47,10 +47,7 @@ public class UpdateCategoryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_update_category);
 		context = this;
-
-		//initDB();
-//		initUi();
-//        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 
     @Override
@@ -58,8 +55,12 @@ public class UpdateCategoryActivity extends Activity {
         super.onStart();
 
         initDB();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         initUi();
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -98,10 +99,6 @@ public class UpdateCategoryActivity extends Activity {
                 ImageButton upBtn = (ImageButton)v.findViewById(R.id.category_up_btn);
                 ImageButton downBtn = (ImageButton)v.findViewById(R.id.category_down_btn);
                 
-                Log.d(TAG, "vo.getTranCategoryName() : " + vo.getTranCategoryName());
-                Log.d(TAG, "vo.isShowUpBtn() : " + vo.isShowUpBtn());
-                Log.d(TAG, "vo.isShowDownBtn() : " + vo.isShowDownBtn());
-                
                 if(vo.getId() == CategoryVo.NEW_CATEGORY_ID){
                 	showNewGroupCategoryDialog();
                 }else{
@@ -109,15 +106,15 @@ public class UpdateCategoryActivity extends Activity {
 
 	                	hideButtonOnLastSelectedListItem();
 	                	
-						setItemButtonVisiblity(View.VISIBLE, vo, upBtn);
-						setItemButtonVisiblity(View.VISIBLE, vo, downBtn);
+						setItemButtonVisibility(View.VISIBLE, vo, upBtn);
+						setItemButtonVisibility(View.VISIBLE, vo, downBtn);
 						vo.setShowUpBtn(true);
 						vo.setShowDownBtn(true);
 						
 						lastSelectedView = v;
 	                }else{
-	                	setItemButtonVisiblity(View.GONE, vo, upBtn);
-	                	setItemButtonVisiblity(View.GONE, vo, downBtn);
+	                	setItemButtonVisibility(View.GONE, vo, upBtn);
+	                	setItemButtonVisibility(View.GONE, vo, downBtn);
 	                	
 	                	vo.setShowUpBtn(false);
 	                	vo.setShowDownBtn(false);
@@ -149,15 +146,15 @@ public class UpdateCategoryActivity extends Activity {
 	                	
 	                	hideButtonOnLastSelectedListItem();
 	                	
-                		setItemButtonVisiblity(View.VISIBLE, vo, upBtn);
-                		setItemButtonVisiblity(View.VISIBLE, vo, downBtn);
+                		setItemButtonVisibility(View.VISIBLE, vo, upBtn);
+                		setItemButtonVisibility(View.VISIBLE, vo, downBtn);
                 		vo.setShowUpBtn(true);
                 		vo.setShowDownBtn(true);
                 		
                 		lastSelectedView = v;
 	                }else{
-	                	setItemButtonVisiblity(View.GONE, vo, upBtn);
-	                	setItemButtonVisiblity(View.GONE, vo, downBtn);
+	                	setItemButtonVisibility(View.GONE, vo, upBtn);
+	                	setItemButtonVisibility(View.GONE, vo, downBtn);
 	                	
 	                	vo.setShowUpBtn(false);	                	
 	                	vo.setShowDownBtn(false);
@@ -222,9 +219,6 @@ public class UpdateCategoryActivity extends Activity {
 	}
 	
 	private void hideButtonOnLastSelectedListItem() {
-		
-		Log.d(TAG, "hideButtonOnLastSelectedListItem()");
-		Log.d(TAG, "lastSelectedView exists? " + (lastSelectedView != null));
 
 		if(lastSelectedView != null ){
 			Log.d(TAG, "Last selected category : " + ((CategoryVo)lastSelectedView.getTag()).getTranCategoryName());
@@ -238,12 +232,12 @@ public class UpdateCategoryActivity extends Activity {
 		lastSelectedView = null;
 	}
 	
-	private void setItemButtonVisiblity(int visiblity, CategoryVo vo, View button){
-		if (visiblity == View.VISIBLE && (vo.getId() != CategoryVo.NEW_CATEGORY_ID)) {
+	private void setItemButtonVisibility(int visibility, CategoryVo vo, View button){
+		if (visibility == View.VISIBLE && (vo.getId() != CategoryVo.NEW_CATEGORY_ID)) {
 			button.setVisibility(View.VISIBLE);
 			button.setFocusable(false);
 			button.setTag(vo);
-		} else if (visiblity == View.GONE) {
+		} else if (visibility == View.GONE) {
 			button.setVisibility(View.GONE);
 		}
 	}
@@ -429,7 +423,6 @@ public class UpdateCategoryActivity extends Activity {
 
 		// code that needs 6 seconds for execution
 		try {
-			dbAdapter.createDataBase();
             dbAdapter.openDataBase();
 		} catch (Exception e) {
 			Log.d(TAG, "initDB() Exception");

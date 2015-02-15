@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.fsz570.easyaccounting.util.Consts;
+
 public class SettingFragment extends Fragment {
 
 	private static final String TAG = "SettingFragment";
@@ -22,11 +24,13 @@ public class SettingFragment extends Fragment {
 	private Button eventBtn;
 	private Button categoryBtn;
     private Button rateBtn;
-    private Button helpBtn;
+    private Button budgetBtn;
+//    private Button helpBtn;
     private LinearLayout eventLayout;
     private LinearLayout categoryLayout;
     private LinearLayout rateLayout;
-    private LinearLayout helpLayout;
+    private LinearLayout budgetLayout;
+//    private LinearLayout helpLayout;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,9 +40,14 @@ public class SettingFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_setting, container, false);
          
         initUi();
-        
-        
+
         return rootView;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        initUi();
     }
     
     
@@ -46,22 +55,26 @@ public class SettingFragment extends Fragment {
     	eventBtn = (Button) rootView.findViewById(R.id.setting_btn_event);
     	categoryBtn = (Button) rootView.findViewById(R.id.setting_btn_category);
         rateBtn = (Button) rootView.findViewById(R.id.setting_btn_rate);
-        helpBtn = (Button) rootView.findViewById(R.id.setting_btn_help);
+        budgetBtn = (Button) rootView.findViewById(R.id.setting_btn_budget);
+//        helpBtn = (Button) rootView.findViewById(R.id.setting_btn_help);
 
         eventLayout = (LinearLayout) rootView.findViewById(R.id.setting_layout_event);
         categoryLayout = (LinearLayout) rootView.findViewById(R.id.setting_layout_category);
         rateLayout = (LinearLayout) rootView.findViewById(R.id.setting_layout_rate);
-        helpLayout = (LinearLayout) rootView.findViewById(R.id.setting_layout_help);
+        budgetLayout = (LinearLayout) rootView.findViewById(R.id.setting_layout_budget);
+//        helpLayout = (LinearLayout) rootView.findViewById(R.id.setting_layout_help);
     	
     	eventBtn.setOnClickListener(clickListener);
         categoryBtn.setOnClickListener(clickListener);
         rateBtn.setOnClickListener(clickListener);
-        helpBtn.setOnClickListener(clickListener);
+        budgetBtn.setOnClickListener(clickListener);
+//        helpBtn.setOnClickListener(clickListener);
 
         eventLayout.setOnClickListener(clickListener);
         categoryLayout.setOnClickListener(clickListener);
         rateLayout.setOnClickListener(clickListener);
-        helpLayout.setOnClickListener(clickListener);
+        budgetLayout.setOnClickListener(clickListener);
+//        helpLayout.setOnClickListener(clickListener);
     }
     
 	// Click Listener for all buttons
@@ -116,22 +129,37 @@ public class SettingFragment extends Fragment {
                     intent.setData(Uri.parse("market://details?id=com.fsz570.easyaccounting"));
                     startActivity(intent);
                     break;
-                case R.id.setting_btn_help:
-                    helpLayout.setPressed(true);
+                case R.id.setting_btn_budget:
+                    budgetLayout.setPressed(true);
                     (new Handler()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            helpLayout.performClick();
+                            budgetLayout.performClick();
                         }
                     }, 100);
                     break;
-                case R.id.setting_layout_help:
-                    Log.d(TAG, "start Help activity");
-                    intent = new Intent(parentActivity, HelpActivity.class);
+                case R.id.setting_layout_budget:
+                    intent = new Intent(parentActivity, UpdateBudgetActivity.class);
 
-                    startActivity(intent);
+                    startActivityForResult(intent, Consts.ACTIVITY_REQUEST_CODE_FOR_UPDATE_BUDGET);
                     break;
+//                case R.id.setting_btn_help:
+//                    helpLayout.setPressed(true);
+//                    (new Handler()).postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            helpLayout.performClick();
+//                        }
+//                    }, 100);
+//                    break;
+//                case R.id.setting_layout_help:
+//                    Log.d(TAG, "start Help activity");
+//                    intent = new Intent(parentActivity, HelpActivity.class);
+//
+//                    startActivity(intent);
+//                    break;
 			}
 		}
 	};
+
 }

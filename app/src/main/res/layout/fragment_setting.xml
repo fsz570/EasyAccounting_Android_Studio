@@ -115,8 +115,39 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="20dp"
-        android:visibility="invisible">
+        android:visibility="visible">
 
+        <LinearLayout
+            android:id="@+id/setting_layout_budget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector_background_style"
+            android:orientation="vertical"
+            android:clickable="false"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_budget"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/setting_btn_budget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@string/setting_btn_budget_text"
+                android:textColor="@android:color/white"
+                android:background="@drawable/empty_background_36x36_96"/>
+        </LinearLayout>
+
+        <!--
         <LinearLayout
             android:id="@+id/setting_layout_help"
             android:layout_width="wrap_content"
@@ -146,7 +177,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/empty_background_36x36_96"/>
         </LinearLayout>
-
+-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

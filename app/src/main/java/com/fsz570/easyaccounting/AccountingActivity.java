@@ -2,11 +2,9 @@ package com.fsz570.easyaccounting;
 
 import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -26,7 +24,6 @@ import com.fsz570.easyaccounting.vo.PieChartDataVo;
 import com.fsz570.easyaccounting.vo.TransactionVo;
 
 import java.util.List;
-import java.util.Locale;
 
 public class AccountingActivity extends FragmentActivity implements
 		ActionBar.TabListener { 
@@ -57,10 +54,6 @@ public class AccountingActivity extends FragmentActivity implements
         actionBar = getActionBar();
 
         setContentView(R.layout.activity_accounting);
-
-        //initDB();
-        initUI();
-    	
 	}
 
     @Override
@@ -72,8 +65,15 @@ public class AccountingActivity extends FragmentActivity implements
     }
 
     @Override
-    protected void onStop(){
+    protected void onResume(){
+        Log.d(TAG, "onResume()");
+        super.onResume();
+        initUi();
+    }
 
+    @Override
+    protected void onStop(){
+        Log.d(TAG, "onStop()");
         if(dbAdapter != null){
             dbAdapter.close();
         }
@@ -97,38 +97,7 @@ public class AccountingActivity extends FragmentActivity implements
 	public void onTabReselected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
 	}
-	
 
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the sections/tabs/pages.
-	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a PlaceholderFragment (defined as a static inner class
-			// below).
-			return PlaceholderFragment.newInstance(position + 1);
-		}
-
-		@Override
-		public int getCount() {
-			// Show 3 total pages.
-			return 4;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
-            return getString(tabs_title[position]).toUpperCase(l);
-		}
-	}
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -165,13 +134,14 @@ public class AccountingActivity extends FragmentActivity implements
 	
 	
 	private void initDB(){
-		Log.d(TAG, "initDB() start");
+		Log.d(TAG, "initDB()");
         //Instant the DB Adapter will create the DB is it not exist.
 		dbAdapter = new DBAdapter(AccountingActivity.this);
 
-        // code that needs 6 seconds for execution
         try{
-        	dbAdapter.createDataBase();
+            if(!dbAdapter.checkDataBaseExist()) {
+                dbAdapter.createDataBase();
+            }
             dbAdapter.openDataBase();
             initData();
 
@@ -191,8 +161,6 @@ public class AccountingActivity extends FragmentActivity implements
 
     private void initData(){
 
-        Log.d(TAG, "Language : " + Locale.getDefault().getLanguage()); // zh
-
         if(dbAdapter.getCategories().size() == 0 ){
             initDefaultCategory();
         }
@@ -203,15 +171,15 @@ public class AccountingActivity extends FragmentActivity implements
     }
 
 
-	private void initUI(){
-		Log.d(TAG, "initUI()");
+	private void initUi(){
+		Log.d(TAG, "initUi()");
 		initTabs();
 	}
 	
 	private void initTabs(){
 		Log.d(TAG, "initTabs()");
 		
-        // Initilization
+        // Initialization
         viewPager = (ViewPager) findViewById(R.id.pager);
 
         mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
@@ -226,15 +194,17 @@ public class AccountingActivity extends FragmentActivity implements
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(tabWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
         LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		for (int i = 0; i < 4; i++) {
-            LinearLayout customView  = (LinearLayout)inflater.inflate(tabs_background[i], null);
-            customView.setLayoutParams(layoutParams);
-            ImageView imageView = (ImageView)customView.findViewById(tabs_image_view_id[i]);
-            imageView.setMinimumWidth(tabWidth-1);
+        if(actionBar.getTabCount()==0) {
+            for (int i = 0; i < 4; i++) {
+                LinearLayout customView = (LinearLayout) inflater.inflate(tabs_background[i], null);
+                customView.setLayoutParams(layoutParams);
+                ImageView imageView = (ImageView) customView.findViewById(tabs_image_view_id[i]);
+                imageView.setMinimumWidth(tabWidth - 1);
 
-			actionBar.addTab(actionBar.newTab().setIcon(tabs_icon[i])
-                    .setTabListener(this).setCustomView(customView));
-		}
+                actionBar.addTab(actionBar.newTab().setIcon(tabs_icon[i])
+                        .setTabListener(this).setCustomView(customView));
+            }
+        }
         
 		/**
 		 * on swiping the viewpager make respective tab selected
@@ -266,44 +236,24 @@ public class AccountingActivity extends FragmentActivity implements
 		
 		try{
 			dbAdapter.insertTrans(transVo);
-
 		}catch(Exception e){
 			Log.d(TAG, "insertTrans fail : " + e.getMessage());
 		}
 	}
 	
 	public List<TransactionVo> queryTrans(int eventId, int categoryId){
-		
-		Log.d(TAG, "queryTrans() Event ID : " + eventId);
-		Log.d(TAG, "queryTrans() Category ID : " + categoryId);
-		
 		return dbAdapter.getTransactionsWithCondition(eventId, categoryId);
 	}
 	
 	public List<TransactionVo> queryTransWithDateRange(String startDate, String endDate, int eventId, int categoryId){
-		
-		Log.d(TAG, "queryTrans()");
-		Log.d(TAG, "Start Date : " + startDate + "; End Date : " + endDate);
-		Log.d(TAG, "queryTrans() Event ID : " + eventId);
-		Log.d(TAG, "queryTrans() Category ID : " + categoryId);
-		
 		return dbAdapter.getTransactions(startDate, endDate, eventId, categoryId);
 	}
 	
 	public List<PieChartDataVo> queryTransForPieChar(String startDate, String endDate, int eventId, int categoryId){
-		
-		Log.d(TAG, "queryTransForPieChar()");
-		Log.d(TAG, "Start Date : " + startDate + "; End Date : " + endDate + "; Event ID : " + eventId+ "; Category ID : " + categoryId);
-		
 		return dbAdapter.getTransactionsForChart(startDate, endDate, eventId, categoryId);
 	}
 	
-public List<PieChartDataVo> queryAllTransForChar(int eventId, int categoryId){
-		
-		Log.d(TAG, "queryAllTransForChar()");
-		Log.d(TAG, "Event ID : " + eventId);
-		Log.d(TAG, "Category ID : " + categoryId);
-		
+    public List<PieChartDataVo> queryAllTransForChar(int eventId, int categoryId){
 		return dbAdapter.getAllTransactionsForChart(eventId, categoryId);
 	}
 	
@@ -321,22 +271,25 @@ public List<PieChartDataVo> queryAllTransForChar(int eventId, int categoryId){
 		
 		dbAdapter.deleteTransaction(transVo);
 	}
-	
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		super.onActivityResult(requestCode, resultCode, data);
-//
-//		Log.d(TAG, "AccountingActivity.onActivityResult()");
-//
-//		// matches the result code passed from ChildActivity
-//		if (requestCode == Consts.ACTIVITY_REQUEST_CODE_FOR_UPDATE_TRANSACTION) {
-//			if (resultCode == RESULT_CANCELED) {
-//				Toast.makeText(this, getResources().getString(R.string.btn_cancel_text), Toast.LENGTH_SHORT).show();
-//			} else if (resultCode == RESULT_OK) {
-//				Toast.makeText(this, getResources().getString(R.string.btn_confirm_text), Toast.LENGTH_SHORT).show();
-//			}
-//
-//			((ListFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(1)).refreshListData();
-//		}
-//	}
+
+    public List<TransactionVo> getTransactionsWithCondition(int eventId, int categoryId){
+        return dbAdapter.getTransactionsWithCondition(eventId, categoryId);
+    }
+
+    public List<TransactionVo> getTransactions(String startDate, String endDate, int eventId, int categoryId){
+        return dbAdapter.getTransactions(startDate, endDate, eventId, categoryId);
+    }
+
+    public long getMonthlyBudget(){
+        return dbAdapter.getMonthlyBudget();
+    }
+
+    public long getExpenseByMonth(String now){
+        return dbAdapter.getExpenseByMonth(now);
+    }
+
+    public void updateBudgetBar(){
+        ((InputFragment)mAdapter.getItem(0)).updateBudgetBar();
+    }
+
 }

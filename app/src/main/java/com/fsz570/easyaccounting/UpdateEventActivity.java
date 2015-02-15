@@ -14,7 +14,7 @@ import java.util.List;
 
 public class UpdateEventActivity extends Activity {
 
-	private static final String TAG = "UpdateTransactionActivity";
+	private static final String TAG = "UpdateEventActivity";
 
 	// Database
 	DBAdapter dbAdapter = null;
@@ -26,9 +26,6 @@ public class UpdateEventActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_update_event);
-
-		//initDB();
-//		initUi();
 	}
 
     @Override
@@ -36,6 +33,11 @@ public class UpdateEventActivity extends Activity {
         super.onStart();
 
         initDB();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         initUi();
     }
 
@@ -83,13 +85,12 @@ public class UpdateEventActivity extends Activity {
 	}
 
 	private void initDB() {
-		Log.d(TAG, "initDB() start");
+		Log.d(TAG, "initDB()");
 		// Instant the DB Adapter will create the DB is it not exist.
 		dbAdapter = new DBAdapter(UpdateEventActivity.this);
 
 		// code that needs 6 seconds for execution
 		try {
-			dbAdapter.createDataBase();
             dbAdapter.openDataBase();
 		} catch (Exception e) {
 			Log.d(TAG, "initDB() Exception");
@@ -105,9 +106,4 @@ public class UpdateEventActivity extends Activity {
 		return dbAdapter;
 	}
 
-	public void setDbAdapter(DBAdapter dbAdapter) {
-		this.dbAdapter = dbAdapter;
-	}
-	
-	
 }

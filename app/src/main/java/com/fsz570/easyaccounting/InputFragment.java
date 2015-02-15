@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +56,10 @@ public class InputFragment extends Fragment {
 	private DecimalFormat df = new DecimalFormat("@###########");
     private Calculator calculator;
     private Boolean userIsInTheMiddleOfTypingANumber = false;
+
+    private RelativeLayout budgetLayout;
+    private ImageView ivExpense;
+    private TextView tvBudget;
 	 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,27 +67,67 @@ public class InputFragment extends Fragment {
         Log.d(TAG, "onCreateView()");
     	parentActivity = ((AccountingActivity)getActivity());
         rootView = inflater.inflate(R.layout.fragment_input, container, false);
-        
-//        initInput();
-         
+
         return rootView;
     }
 
     @Override
-    public void onStart(){
-        Log.d(TAG, "onStart()");
-        super.onStart();
-        initInput();
+    public void onResume(){
+        Log.d(TAG, "onResume()");
+        super.onResume();
+
+        initUi();
     }
     
-	private void initInput(){
-		Log.d(TAG, "initInput()");
-		
+	private void initUi(){
+		Log.d(TAG, "initUi()");
+
+        initBudget();
 		initEventSpinner();
 		initCategorySpinner();
 		initCalculator();
         initComment();
+        initBudget();
 	}
+
+    private void initBudget(){
+        Log.d(TAG, "initBudget()");
+        budgetLayout = (RelativeLayout) rootView.findViewById(R.id.budget_layout);
+        ivExpense = (ImageView) rootView.findViewById(R.id.iv_expense);
+        tvBudget = (TextView) rootView.findViewById(R.id.tv_budget_bar);
+
+        updateBudgetBar();
+    }
+
+    public void updateBudgetBar(){
+        Log.d(TAG, "updateBudgetBar()");
+        TextView dateText = (TextView)rootView.findViewById(R.id.date_text);
+        String now = dateText.getText().toString();
+
+        long monthlyBudget = parentActivity.getMonthlyBudget();
+        if(monthlyBudget > 0){
+            budgetLayout.setVisibility(View.VISIBLE);
+            long expenseThisMonth = parentActivity.getExpenseByMonth(now);
+            tvBudget.setText(expenseThisMonth+" / " + monthlyBudget);
+
+            budgetLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+            int budgetLayoutWidth = budgetLayout.getMeasuredWidth();
+
+            Log.d(TAG, "budgetLayoutWidth : " + budgetLayoutWidth);
+            Log.d(TAG, "expenseThisMonth : " + expenseThisMonth);
+            Log.d(TAG, "monthlyBudget : " + monthlyBudget);
+
+            if(expenseThisMonth < monthlyBudget){
+                ivExpense.getLayoutParams().width = (int)(budgetLayoutWidth * expenseThisMonth / monthlyBudget);
+            }else{
+                ivExpense.getLayoutParams().width = budgetLayoutWidth;
+            }
+        }else{
+            budgetLayout.setVisibility(View.GONE);
+        }
+    }
 	
 	private void initEventSpinner(){
 		Log.d(TAG, "initEventSpinner()");
@@ -117,7 +163,6 @@ public class InputFragment extends Fragment {
 
 	private void initCalculator(){		
 		calCalculationInput = (EditText)rootView.findViewById(R.id.cal_calculation_input);
-        //calCalculationInput.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         calCalculationInput.getBackground().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
 
 		calculator = new Calculator();
@@ -213,6 +258,7 @@ public class InputFragment extends Fragment {
 						Toast.makeText(parentActivity, getResources().getString(R.string.insert_transaction_success),
 								Toast.LENGTH_LONG).show();
                         parentActivity.insertTrans(genTransVo());
+                        updateBudgetBar();
                         calCalculationInput.setText("");
                         ((EditText)rootView.findViewById(R.id.transaction_item_comment)).setText("");
                         v.requestFocus();
@@ -237,16 +283,13 @@ public class InputFragment extends Fragment {
 	}
 
 	private TransactionVo genTransVo(){
-		
-		Log.d(TAG, "genTransVo()");
-		
 		TransactionVo transVo = null;
 		
 		try{
 			double tranAmount = Double.parseDouble(calCalculationInput.getText().toString().replaceAll(",",""));
 			
 			transVo = new TransactionVo();
-			TextView dateText = (TextView)((AccountingActivity)parentActivity).findViewById(R.id.date_text);
+			TextView dateText = (TextView)parentActivity.findViewById(R.id.date_text);
 			dateStr = dateText.getText().toString();
 			transVo.setTranDate(dateStr);
 			transVo.setTranCategoryId(parentActivity.getInputCategoryId());
@@ -256,7 +299,7 @@ public class InputFragment extends Fragment {
 				transVo.setTranEventId(tranEventId);
 			}
 			transVo.setTranAmount(tranAmount);
-            transVo.setTranComment(((EditText)((AccountingActivity)parentActivity).findViewById(R.id.transaction_item_comment)).getText().toString());
+            transVo.setTranComment(((EditText)parentActivity.findViewById(R.id.transaction_item_comment)).getText().toString());
 		}catch(Exception e){
 			Log.d(TAG, "Fail : " + e.getMessage());
 		}

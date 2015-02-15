@@ -26,7 +26,7 @@ import java.util.List;
 
 public class UpdateTransactionActivity extends Activity {
 	
-	private static final String TAG = "UpdateTransactionActivity";
+	private static final String TAG = "UpdateTranActivity";
 	
 	TransactionVo transVo;
 	
@@ -64,17 +64,18 @@ public class UpdateTransactionActivity extends Activity {
 		setContentView(R.layout.fragment_input);
 		
 		transVo = (TransactionVo)getIntent().getParcelableExtra(TransactionVo.TRANSACTION_VO_NAME);
-		
-		//initDB();
-//		initInput();
 	}
 
     @Override
     protected void onStart(){
         super.onStart();
-
         initDB();
-        initInput();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        initUi();
     }
 
     @Override
@@ -93,7 +94,6 @@ public class UpdateTransactionActivity extends Activity {
 
         // code that needs 6 seconds for execution
         try{
-        	dbAdapter.createDataBase();
             dbAdapter.openDataBase();
         }catch(Exception e){
         	Log.d(TAG, "initDB() Exception");
@@ -105,8 +105,8 @@ public class UpdateTransactionActivity extends Activity {
         Log.d(TAG, "initDB() end.");
 	}
 	
-	private void initInput(){
-		Log.d(TAG, "initInput()");
+	private void initUi(){
+		Log.d(TAG, "initUi()");
 		
 		TextView dateText = (TextView)findViewById(R.id.date_text);
 		dateText.setText(transVo.getTranDate());

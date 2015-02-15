@@ -28,18 +28,19 @@ public class DBAdapter extends SQLiteOpenHelper {
 	private static final String TAG = "DBAdapter";
 
 	private static final String DB_NAME = "ez_account.db";
-	//private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	private static final String TRANS_TABLE = "T_HIS_TRAN";
 	private static final String EVENT_TABLE = "C_CFG_EVNT";
 	private static final String CATEGORY_TABLE = "C_CFG_CTGR";
+    private static final String PARAMETER_TABLE = "C_CFG_PARM";
 
 	private final Context context;
 	private SQLiteDatabase theDataBase;
 	private String DB_PATH;
 
 	public DBAdapter(Context _context) {
-		super(_context, DB_NAME, null, 1);
+		super(_context, DB_NAME, null, DATABASE_VERSION);
 		context = _context;
 		File outFile = context.getDatabasePath(DB_NAME);
 		DB_PATH = outFile.getPath() ;
@@ -51,28 +52,19 @@ public class DBAdapter extends SQLiteOpenHelper {
 	// to create a new one.
 	@Override
 	public void onCreate(SQLiteDatabase _db) {
-		_db.beginTransaction();
+        Log.d(TAG, "DBAdapter.onCreate()");
 
-		try {
-			// Try to copy predefined db
-			Log.d(TAG, "DBAdapter.onCreate()");
-			boolean dbExist = checkDataBase();
-			
-			if (!dbExist){
-				try {
-					Log.d(TAG, "DB not exist! copy from assets.");
-					copyDataBase();
-				} catch (IOException e) {
-					throw new Error("Error copying database");
-				}
-			}
-			
-		} catch (Exception e) {
-			Log.e(TAG, "DBAdapter.onCreate():" + e.getMessage());
-			Log.d(TAG, "Copy DB Fail, create new one.");
-		}
-
-		_db.endTransaction();
+//		try {
+//			// Try to copy predefined db
+//
+//            Log.d(TAG, "DB not exist! copy from assets.");
+////            copyDataBase();
+//		} catch (IOException e) {
+//            throw new Error("Error copying database");
+//        } catch (Exception e) {
+//			Log.e(TAG, "DBAdapter.onCreate():" + e.getMessage());
+//			Log.d(TAG, "Copy DB Fail, create new one.");
+//		}
 	}
 
 	// Called when there is a database version mismatch meaning that
@@ -81,7 +73,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase _db, int _oldVersion, int _newVersion) {
 		// Log the version upgrade.
-		Log.w(TAG, "Upgrading from version " + _oldVersion + " to "
+		Log.d(TAG, "Upgrading from version " + _oldVersion + " to "
 				+ _newVersion + ", which will destroy all old data");
 		// Upgrade the existing database to conform to the new version.
 		// Multiple previous versions can be handled by comparing
@@ -90,7 +82,14 @@ public class DBAdapter extends SQLiteOpenHelper {
 		// new one.
 
 		// Create a new one.
-		onCreate(_db);
+//		 onCreate(_db);
+//        if(_newVersion > _oldVersion){
+//            if(_newVersion == 2 && _oldVersion == 1){
+//                _db.execSQL(createParamTableSql());
+//                addMonthlyBudgetParam(_db);
+//            }
+//        }
+
 	}
 
 	public void openDataBase() throws SQLException {
@@ -101,10 +100,23 @@ public class DBAdapter extends SQLiteOpenHelper {
 
         //If null or not open
         if(null == theDataBase || (null != theDataBase && !theDataBase.isOpen())){
-            theDataBase = SQLiteDatabase.openDatabase(myPath, null,
-                    SQLiteDatabase.OPEN_READWRITE);
+            //Trigger onCreate first
+            theDataBase = getWritableDatabase();
+//            theDataBase.close();
+//            //Close previous one
+//            theDataBase = SQLiteDatabase.openDatabase(myPath, null,
+//                    SQLiteDatabase.OPEN_READWRITE);
         }
+
+        //The original code will not trigger onUpgrade
+        //The following code should move to onUpgrade after this patch
+        if(!isTableExists(PARAMETER_TABLE)){
+            theDataBase.execSQL(createParamTableSql());
+            addMonthlyBudgetParam(theDataBase);
+        }
+
         Log.d(TAG, "theDataBase null ? " + (theDataBase==null));
+        Log.d(TAG, "Database version : " + (theDataBase.getVersion()));
 	}
 
 	@Override
@@ -119,13 +131,12 @@ public class DBAdapter extends SQLiteOpenHelper {
 	 * database.
 	 * */
 	public void createDataBase() throws IOException {
-
-		boolean dbExist = checkDataBase();
-		Log.d(TAG, "createDataBase()!");
+        Log.d(TAG, "createDataBase()!");
+		//boolean dbExist = checkDataBaseExist();
+        boolean dbExist = false;
 
 		if (dbExist) {
 			// do nothing - database already exist
-			this.getReadableDatabase();
 			Log.d(TAG, "DB Exist!");
 		} else {
 			// By calling this method and empty database will be created into
@@ -150,11 +161,9 @@ public class DBAdapter extends SQLiteOpenHelper {
 	 * 
 	 * @return true if it exists, false if it doesn't
 	 */
-	private boolean checkDataBase() {
-
+	public boolean checkDataBaseExist() {
 		SQLiteDatabase checkDB = null;
-		
-		Log.d(TAG, "checkDataBase()!");
+		Log.d(TAG, "checkDataBaseExist()!");
 
 		try {
 //			String myPath = DB_PATH + DB_NAME;
@@ -169,7 +178,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 		if (checkDB != null) {
 			Log.d(TAG, "DB Exists!");
-			checkDB.close();
+            checkDB.close();
 		}else{
 			Log.d(TAG, "DB not exists!");
 		}
@@ -183,8 +192,8 @@ public class DBAdapter extends SQLiteOpenHelper {
 	 * handled. This is done by transfering bytestream.
 	 * */
 	private void copyDataBase() throws IOException {
+        Log.d(TAG, "copyDataBase()!");
 
-		Log.d(TAG, "copyDataBase()!");
 		InputStream myInput = null;
 		OutputStream myOutput = null;
 		
@@ -464,8 +473,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 	
 	public List<TransactionVo> getTransactions(String startDate, String endDate, int eventId, int categoryId){
-		Log.d(TAG, "getTransactions()!");
-		
+
 		List<TransactionVo> trans = new ArrayList<TransactionVo>();
 		
 		openDataBase();
@@ -768,6 +776,106 @@ public class DBAdapter extends SQLiteOpenHelper {
 		return sb.toString();
 	}
 
+    private String createParamTableSql(){
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("CREATE TABLE ").append(PARAMETER_TABLE).append("(")
+                .append(" _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ")
+                .append(" parameter_name TEXT NOT NULL, ")
+                .append(" parameter_value TEXT NOT NULL ")
+                .append(")");
+        return sb.toString();
+    }
+
+    private void addMonthlyBudgetParam(SQLiteDatabase _db){
+        Log.d(TAG, "addMonthlyBudgetParam()");
+
+        ContentValues cv = new ContentValues();
+        cv.put("parameter_name",Consts.PARAM_MONTHLY_BUDGET_NAME);
+        cv.put("parameter_value","0");
+
+        long rowId = _db.insert(PARAMETER_TABLE, null, cv);
+        Log.d(TAG, "rowId : " + rowId);
+    }
+
+    public long getMonthlyBudget(){
+        Log.d(TAG, "getMonthlyBudget()");
+        long monthlyBudget = 0;
+
+        openDataBase();
+        Cursor cursor = theDataBase.rawQuery(getMonthlyBudgetSql(), new String[]{Consts.PARAM_MONTHLY_BUDGET_NAME});
+
+        if ( cursor.moveToFirst () ) {
+            do {
+                try
+                {
+                    monthlyBudget = cursor.getLong(0);
+                }catch(Exception e){
+                    //Nothing
+                }
+            } while (cursor.moveToNext());
+        }
+
+        // closing connection
+        cursor.close();
+
+        return monthlyBudget;
+    }
+
+    public void updateMonthlyBudget(long monthlyBudget){
+        Log.d(TAG, "updateMonthlyBudget()");
+
+        ContentValues cv = new ContentValues();
+        cv.put("parameter_value",monthlyBudget);
+
+        openDataBase();
+
+        theDataBase.update(PARAMETER_TABLE, cv, " parameter_name = ? ", new String[]{Consts.PARAM_MONTHLY_BUDGET_NAME});
+    }
+
+    private String getMonthlyBudgetSql(){
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("SELECT parameter_value FROM ").append(PARAMETER_TABLE)
+                .append(" WHERE parameter_name = ? ");
+
+        return sb.toString();
+    }
+
+    public long getExpenseByMonth(String now){
+        Log.d(TAG, "getMonthlyBudget()");
+        long monthlyExpense = 0;
+
+        openDataBase();
+        Cursor cursor = theDataBase.rawQuery(getExpenseByMonthSql(), new String[]{now,now});
+
+        if ( cursor.moveToFirst () ) {
+            do {
+                try
+                {
+                    monthlyExpense = cursor.getLong(0);
+                }catch(Exception e){
+                    //Nothing
+                }
+            } while (cursor.moveToNext());
+        }
+
+        // closing connection
+        cursor.close();
+
+        return monthlyExpense;
+    }
+
+    private String getExpenseByMonthSql(){
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("SELECT SUM(tran_amount) FROM ").append(TRANS_TABLE)
+                .append(" WHERE tran_date between date(?,'start of month') ")
+                .append(" AND date(?,'start of month','+1 month','-1 day')");
+
+        return sb.toString();
+    }
+
     public void initDefaultCategory(){
         int pIdCatFood = newParentCategory(context.getResources().getString(R.string.cat_food));
         newChildCategory(pIdCatFood, context.getResources().getString(R.string.cat_food_dine_out));
@@ -778,5 +886,17 @@ public class DBAdapter extends SQLiteOpenHelper {
         long pIdCatHousing = newParentCategory(context.getResources().getString(R.string.cat_housing));
         long pIdCatTraffic = newParentCategory(context.getResources().getString(R.string.cat_traffic));
         long pIdCatRecation = newParentCategory(context.getResources().getString(R.string.cat_recreation));
+    }
+
+    public boolean isTableExists(String tableName) {
+        Cursor cursor = theDataBase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
     }
 }

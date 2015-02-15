@@ -28,7 +28,7 @@ public class fszDatePicker extends TableLayout {
 
 	private static final String TAG = "fszDatePicker";
 	
-	private Activity parentActivity;
+	private static Activity parentActivity;
 
 	private TextView dateText;
 	private ImageButton leftBtn;

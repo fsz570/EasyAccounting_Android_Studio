@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/budget_setting_background_style"
+    tools:context="${relativePackage}.${activityClass}"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/monthly_budget_text"
+        android:id="@+id/tv_monthly_budget"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@android:color/background_dark" />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/et_monthly_budget"
+        android:layout_below="@+id/tv_monthly_budget"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:numeric="integer" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cal_btn_cancel_text"
+            android:background="@drawable/command_btn_selector_background_style"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp" />
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cal_btn_confirm_text"
+            android:background="@drawable/command_btn_selector_background_style"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="2dp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

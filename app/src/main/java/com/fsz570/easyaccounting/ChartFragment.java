@@ -76,19 +76,17 @@ public class ChartFragment extends Fragment {
 		sdf = new SimpleDateFormat("yyyy-MM-dd");
 		queryPanel = ((LinearLayout)rootView.findViewById(R.id.chart_query_panel));
 
-//		initUI();
-
 		return rootView;
     }
 
     @Override
-    public void onStart(){
-        super.onStart();
-        initUI();
+    public void onResume(){
+        super.onResume();
+        initUi();
     }
- 
-    private void initUI(){
-    	Log.d(TAG, "initUI()");
+
+    private void initUi(){
+    	Log.d(TAG, "initUi()");
 
         initQueryPanel();
         initChart();
@@ -98,7 +96,6 @@ public class ChartFragment extends Fragment {
         rootView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.d(TAG, "setOnFocusChangeListener() hasFocus : " + hasFocus);
                 if(hasFocus) {
 
                     if(lastCheckedBtnId==NO_CHECKED_BUTTON){
@@ -167,10 +164,6 @@ public class ChartFragment extends Fragment {
 				.findViewById(R.id.query_event_spinner);
 
 		List<EventVo> events = parentActivity.getDbAdapter().getEnabledEvents();
-//		ArrayAdapter<EventVo> dataAdapter = new ArrayAdapter<EventVo>(
-//				((AccountingActivity) getActivity()),
-//				android.R.layout.simple_spinner_item, events);
-//		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<EventVo> dataAdapter = new ArrayAdapter<EventVo>(
                 ((AccountingActivity) getActivity()),
                 R.layout.simple_spinner_item, events);
@@ -185,7 +178,6 @@ public class ChartFragment extends Fragment {
 					View selectedItemView, int position, long id) {
 				EventVo eventVo = (EventVo) eventSpinner
 						.getItemAtPosition(position);
-				Log.d(TAG, "OnItemSelectedListener : " + eventVo.getEventName());
 
 				//Update Chart
 				pieChart.setData(getTransactionDataWithCondition(eventVo.getId(), getCategoryId()));
@@ -213,9 +205,6 @@ public class ChartFragment extends Fragment {
 		parentCategoryList.add(0, new CategoryVo(Consts.NO_CATEGORY_ID, Consts.NO_CATEGORY_ID, "",
 			null, 0));
 		
-//		ArrayAdapter<CategoryVo> dataAdapter = new ArrayAdapter<CategoryVo>(parentActivity,
-//			    android.R.layout.simple_spinner_item, parentCategoryList);
-//		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CategoryVo> dataAdapter = new ArrayAdapter<CategoryVo>(parentActivity,
                 R.layout.simple_spinner_item, parentCategoryList);
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
@@ -314,7 +303,7 @@ public class ChartFragment extends Fragment {
 			changeDate(new Date(), 0);
 			//changeDate(0);
 		} else {
-			// Not allow uncheck
+			// Not allow unchecked
 			view.setChecked(true);
 		}
 	}
@@ -432,22 +421,16 @@ public class ChartFragment extends Fragment {
 	}
 	
 	private PieData getTransactionData() {
-		Log.d(TAG, "getTransactionData()");
-		
 		return getTransactionDataWithCondition(getEventId(), getCategoryId());
 		
 	}
 	
 	private PieData getTransactionDataWithCondition(int eventId, int categoryId) {
-		Log.d(TAG, "getTransactionDataWithCondition()");
-
 		if(lastCheckedBtnId == R.id.query_all_btn){
 			return translateToChartData(parentActivity.queryAllTransForChar(eventId, categoryId));
 		}else{
 			return translateToChartData(parentActivity.queryTransForPieChar(startDateStr, getEndDate(), eventId, categoryId));
 		}
-		
-		
 	}
 
 
@@ -490,8 +473,6 @@ public class ChartFragment extends Fragment {
 	}
 
 	private String getEndDate() {
-		Log.d(TAG, "getEndDate()");
-
 		Date date;
 		Calendar cal = new GregorianCalendar();
 
@@ -565,8 +546,6 @@ public class ChartFragment extends Fragment {
 	
     
     private void initChart(){
-    	Log.d(TAG, "initChart()");
-    	
     	pieChart = (PieChart) rootView.findViewById(R.id.pie_chart);
     	
     	pieChart.setDrawHoleEnabled(true);
@@ -633,8 +612,6 @@ public class ChartFragment extends Fragment {
         pieChart.setCenterText(String.format(getResources().getString(R.string.bar_chart_center_text_format), Utils.formatAmount(total)));
 
         return new PieData(xVals, set1);
-
-
     }
     
     private static class MyValueFormatter implements ValueFormatter{
