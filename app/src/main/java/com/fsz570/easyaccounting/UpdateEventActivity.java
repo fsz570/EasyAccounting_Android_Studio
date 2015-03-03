@@ -8,6 +8,7 @@ import android.widget.ListView;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.ListItemEventAdapter;
+import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.EventVo;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public class UpdateEventActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) {
+            Utils.enableStrictMode();
+        }
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_update_event);
 	}

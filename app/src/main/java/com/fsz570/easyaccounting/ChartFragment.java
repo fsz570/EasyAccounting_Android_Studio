@@ -99,6 +99,11 @@ public class ChartFragment extends Fragment {
                 if(hasFocus) {
 
                     if(lastCheckedBtnId==NO_CHECKED_BUTTON){
+                        queryDayBtn.setChecked(false);
+                        queryMonthBtn.setChecked(false);
+                        queryYearBtn.setChecked(false);
+                        queryAllBtn.setChecked(false);
+
                         queryWeekBtn.setChecked(true);
                         lastCheckedBtnId = R.id.query_week_btn;
                         changeDate(0);

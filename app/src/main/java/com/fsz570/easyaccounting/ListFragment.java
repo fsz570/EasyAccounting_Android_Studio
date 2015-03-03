@@ -106,6 +106,11 @@ public class ListFragment extends Fragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) {
                     if(lastCheckedBtnId==NO_CHECKED_BUTTON){
+                        queryWeekBtn.setChecked(false);
+                        queryMonthBtn.setChecked(false);
+                        queryYearBtn.setChecked(false);
+                        queryAllBtn.setChecked(false);
+
                         queryDayBtn.setChecked(true);
                         lastCheckedBtnId = R.id.query_day_btn;
                         changeDate(0);

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.CategoryExpandableListAdapter;
+import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 
 import java.util.List;
@@ -44,6 +45,9 @@ public class UpdateCategoryActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) {
+            Utils.enableStrictMode();
+        }
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_update_category);
 		context = this;
@@ -359,14 +363,19 @@ public class UpdateCategoryActivity extends Activity {
 		dbAdapter.newParentCategory(newCategoryName);
 		listViewAdapter.setDataSource(dbAdapter.getCategories()); //Refresh after update
 	}
-	
-	public void doNewChildCategoryClick(int parentId, String newCategoryName) {
-	    // Do stuff here.
-		dbAdapter.newChildCategory(parentId, newCategoryName);
-		listViewAdapter.setDataSource(dbAdapter.getCategories()); //Refresh after update
-	}
-	
-	public void doUpdateCategoryClick(int id, String newCategoryName) {
+
+    public void doNewChildCategoryClick(final int parentId, final String newCategoryName) {
+        // Do stuff here.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dbAdapter.newChildCategory(parentId, newCategoryName);
+                listViewAdapter.setDataSource(dbAdapter.getCategories()); //Refresh after update
+            }
+        }).start();
+    }
+
+    public void doUpdateCategoryClick(int id, String newCategoryName) {
 	    // Do stuff here.
 		dbAdapter.updateCategory(id, newCategoryName);
 		listViewAdapter.setDataSource(dbAdapter.getCategories()); //Refresh after update

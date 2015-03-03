@@ -59,11 +59,14 @@ public class UpdateTransactionActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) {
+            Utils.enableStrictMode();
+        }
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.fragment_input);
 		
-		transVo = (TransactionVo)getIntent().getParcelableExtra(TransactionVo.TRANSACTION_VO_NAME);
+		transVo = getIntent().getParcelableExtra(TransactionVo.TRANSACTION_VO_NAME);
 	}
 
     @Override
@@ -292,18 +295,17 @@ public class UpdateTransactionActivity extends Activity {
 		
 		return false;
 	}
-	
-	public void updateTrans(TransactionVo transVo){
-		
-		try{
-			dbAdapter.updateTrans(transVo);
 
-		}catch(Exception e){
-			Log.d(TAG, "updateTrans fail : " + e.getMessage());
-		}
-	}
-	
-	private TransactionVo genTransVo(){
+    public void updateTrans(final TransactionVo transVo) {
+
+        try {
+            dbAdapter.updateTrans(transVo);
+        } catch (Exception e) {
+            Log.d(TAG, "updateTrans fail : " + e.getMessage());
+        }
+    }
+
+    private TransactionVo genTransVo(){
 		
 		Log.d(TAG, "genTransVo()");
 			

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fsz570.db_utils.DBAdapter;
+import com.fsz570.easyaccounting.util.Utils;
 
 
 public class UpdateBudgetActivity extends Activity {
@@ -22,6 +23,9 @@ public class UpdateBudgetActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) {
+            Utils.enableStrictMode();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_budget);
     }

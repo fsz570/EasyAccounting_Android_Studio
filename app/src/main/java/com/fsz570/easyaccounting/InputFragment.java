@@ -2,6 +2,7 @@ package com.fsz570.easyaccounting;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,9 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fsz570.easyaccounting.util.Calculator;
+import com.fsz570.easyaccounting.util.Consts;
 import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 import com.fsz570.easyaccounting.vo.EventVo;
+import com.fsz570.easyaccounting.vo.MonthlyBudgetVo;
 import com.fsz570.easyaccounting.vo.TransactionVo;
 
 import java.text.DecimalFormat;
@@ -96,44 +99,52 @@ public class InputFragment extends Fragment {
         ivExpense = (ImageView) rootView.findViewById(R.id.iv_expense);
         tvBudget = (TextView) rootView.findViewById(R.id.tv_budget_bar);
 
-        updateBudgetBar();
+        updateBudgetBar(parentActivity.getMonthlyBudgetVo(getCurrentDate()));
     }
 
-    public void updateBudgetBar(){
+    public void updateBudgetBar(MonthlyBudgetVo vo) {
         Log.d(TAG, "updateBudgetBar()");
-        TextView dateText = (TextView)rootView.findViewById(R.id.date_text);
-        String now = dateText.getText().toString();
+//        TextView dateText = (TextView) rootView.findViewById(R.id.date_text);
+//        String now = dateText.getText().toString();
 
-        long monthlyBudget = parentActivity.getMonthlyBudget();
-        if(monthlyBudget > 0){
-            budgetLayout.setVisibility(View.VISIBLE);
-            long expenseThisMonth = parentActivity.getExpenseByMonth(now);
-            tvBudget.setText(expenseThisMonth+" / " + monthlyBudget);
+        //long monthlyBudget = parentActivity.getMonthlyBudget();
+        final long monthlyBudget = vo.getMonthlyBudget();
+        final long expenseThisMonth = vo.getMonthlyExpense();
 
-            budgetLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (monthlyBudget > 0) {
+                    budgetLayout.setVisibility(View.VISIBLE);
+                    tvBudget.setText(expenseThisMonth + " / " + monthlyBudget);
 
-            int budgetLayoutWidth = budgetLayout.getMeasuredWidth();
+                    budgetLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
-            Log.d(TAG, "budgetLayoutWidth : " + budgetLayoutWidth);
-            Log.d(TAG, "expenseThisMonth : " + expenseThisMonth);
-            Log.d(TAG, "monthlyBudget : " + monthlyBudget);
+                    int budgetLayoutWidth = budgetLayout.getMeasuredWidth();
 
-            if(expenseThisMonth < monthlyBudget){
-                ivExpense.getLayoutParams().width = (int)(budgetLayoutWidth * expenseThisMonth / monthlyBudget);
-            }else{
-                ivExpense.getLayoutParams().width = budgetLayoutWidth;
+                    Log.d(TAG, "budgetLayoutWidth : " + budgetLayoutWidth);
+                    Log.d(TAG, "expenseThisMonth : " + expenseThisMonth);
+                    Log.d(TAG, "monthlyBudget : " + monthlyBudget);
+
+                    if (expenseThisMonth < monthlyBudget) {
+                        ivExpense.getLayoutParams().width = (int) (budgetLayoutWidth * expenseThisMonth / monthlyBudget);
+                    } else {
+                        ivExpense.getLayoutParams().width = budgetLayoutWidth;
+                    }
+                } else {
+                    budgetLayout.setVisibility(View.GONE);
+                }
             }
-        }else{
-            budgetLayout.setVisibility(View.GONE);
-        }
+        });
     }
-	
-	private void initEventSpinner(){
+
+    private void initEventSpinner(){
 		Log.d(TAG, "initEventSpinner()");
 		
 		this.eventSpinner = (Spinner) rootView.findViewById(R.id.input_event_spinner);
-		
+
+        //TODO modify this to Handler / Message
 		List <EventVo> events = parentActivity.getDbAdapter().getEnabledEvents();
 
         ArrayAdapter<EventVo> dataAdapter = new ArrayAdapter<EventVo>((getActivity()),
@@ -257,8 +268,9 @@ public class InputFragment extends Fragment {
 					case R.id.cal_btn_insert :
 						Toast.makeText(parentActivity, getResources().getString(R.string.insert_transaction_success),
 								Toast.LENGTH_LONG).show();
-                        parentActivity.insertTrans(genTransVo());
-                        updateBudgetBar();
+                        new insertTransInBackground().execute(genTransVo());
+//                        parentActivity.insertTrans(genTransVo());
+//                        updateBudgetBar();
                         calCalculationInput.setText("");
                         ((EditText)rootView.findViewById(R.id.transaction_item_comment)).setText("");
                         v.requestFocus();
@@ -289,10 +301,8 @@ public class InputFragment extends Fragment {
 			double tranAmount = Double.parseDouble(calCalculationInput.getText().toString().replaceAll(",",""));
 			
 			transVo = new TransactionVo();
-			TextView dateText = (TextView)parentActivity.findViewById(R.id.date_text);
-			dateStr = dateText.getText().toString();
-			transVo.setTranDate(dateStr);
-			transVo.setTranCategoryId(parentActivity.getInputCategoryId());
+			transVo.setTranDate(getCurrentDate());
+			transVo.setTranCategoryId(getInputCategoryId());
 
 			int tranEventId = parentActivity.getInputEventId();
 			if(tranEventId!=EventVo.EMPTY_EVENT_ID){
@@ -306,4 +316,41 @@ public class InputFragment extends Fragment {
 		
 		return transVo;
 	}
+
+    private class insertTransInBackground extends AsyncTask<TransactionVo, Void, MonthlyBudgetVo>{
+
+        @Override
+        protected MonthlyBudgetVo doInBackground(TransactionVo... vo){
+            String now = vo[0].getTranDate();
+            parentActivity.insertTrans(vo[0]);
+            long monthlyBudget = parentActivity.getMonthlyBudget();
+            long monthlyExpense = parentActivity.getExpenseByMonth(now);
+
+            return new MonthlyBudgetVo(monthlyBudget, monthlyExpense);
+        }
+
+        @Override
+        protected void onPostExecute(MonthlyBudgetVo vo){
+            super.onPostExecute(vo);
+
+            updateBudgetBar(vo);
+        }
+    }
+
+    private String getCurrentDate(){
+        TextView dateText = (TextView)rootView.findViewById(R.id.date_text);
+        String now = dateText.getText().toString();
+
+        return now;
+    }
+
+    private int getInputCategoryId(){
+        CategoryVo categoryVo = (CategoryVo)categorySpinner.getSelectedItem();
+        if (categoryVo == null) {
+            return Consts.NO_CATEGORY_ID;
+        } else {
+            return categoryVo.getId();
+        }
+    }
+
 }

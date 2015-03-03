@@ -1,11 +1,18 @@
 package com.fsz570.easyaccounting.util;
 
+import android.os.Build;
+import android.os.StrictMode;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 
+import com.fsz570.easyaccounting.AccountingActivity;
+import com.fsz570.easyaccounting.UpdateBudgetActivity;
+import com.fsz570.easyaccounting.UpdateCategoryActivity;
+import com.fsz570.easyaccounting.UpdateEventActivity;
+import com.fsz570.easyaccounting.UpdateTransactionActivity;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 
 import java.text.NumberFormat;
@@ -16,6 +23,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class Utils {
+
+    private Utils() {};
 
 	public static Date getToday() {
 		return Calendar.getInstance().getTime();
@@ -217,5 +226,56 @@ public class Utils {
 
     public static boolean isContainOnlyZeroAndDot(String value){
         return value.replaceAll("0", "").replaceAll(".","").length() == 0;
+    }
+
+    public static void enableStrictMode() {
+        if (Utils.hasGingerbread()) {
+            StrictMode.ThreadPolicy.Builder threadPolicyBuilder =
+                    new StrictMode.ThreadPolicy.Builder()
+                            .detectAll()
+                            .penaltyLog();
+            StrictMode.VmPolicy.Builder vmPolicyBuilder =
+                    new StrictMode.VmPolicy.Builder()
+                            .detectAll()
+                            .penaltyLog();
+
+            if (Utils.hasHoneycomb()) {
+                threadPolicyBuilder.penaltyFlashScreen();
+                vmPolicyBuilder
+                        .setClassInstanceLimit(AccountingActivity.class, 1)
+                        .setClassInstanceLimit(UpdateTransactionActivity.class, 1)
+                        .setClassInstanceLimit(UpdateCategoryActivity.class, 1)
+                        .setClassInstanceLimit(UpdateEventActivity.class, 1)
+                        .setClassInstanceLimit(UpdateBudgetActivity.class, 1);
+            }
+            StrictMode.setThreadPolicy(threadPolicyBuilder.build());
+            StrictMode.setVmPolicy(vmPolicyBuilder.build());
+        }
+    }
+
+    public static boolean hasFroyo() {
+        // Can use static final constants like FROYO, declared in later versions
+        // of the OS since they are inlined at compile time. This is guaranteed behavior.
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+    }
+
+    public static boolean hasGingerbread() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+    }
+
+    public static boolean hasHoneycomb() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    }
+
+    public static boolean hasHoneycombMR1() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+    }
+
+    public static boolean hasJellyBean() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    public static boolean hasKitKat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 }

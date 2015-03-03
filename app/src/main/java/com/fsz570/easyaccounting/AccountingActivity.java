@@ -18,8 +18,9 @@ import android.widget.Spinner;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.TabsPagerAdapter;
-import com.fsz570.easyaccounting.vo.CategoryVo;
+import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.EventVo;
+import com.fsz570.easyaccounting.vo.MonthlyBudgetVo;
 import com.fsz570.easyaccounting.vo.PieChartDataVo;
 import com.fsz570.easyaccounting.vo.TransactionVo;
 
@@ -48,6 +49,9 @@ public class AccountingActivity extends FragmentActivity implements
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
+        if (BuildConfig.DEBUG) {
+            Utils.enableStrictMode();
+        }
         super.onCreate(savedInstanceState);
 
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
@@ -262,10 +266,10 @@ public class AccountingActivity extends FragmentActivity implements
 		return ((EventVo)eventSpinner.getSelectedItem()).getId();
 	}
 	
-	public int getInputCategoryId(){
-		Spinner categorySpinner = (Spinner)findViewById(R.id.input_category_spinner);
-		return ((CategoryVo)categorySpinner.getSelectedItem()).getId();
-	}
+//	public int getInputCategoryId(){
+//        Spinner categorySpinner = (Spinner)findViewById(R.id.input_category_spinner);
+//        return ((CategoryVo)categorySpinner.getSelectedItem()).getId();
+//    }
 	
 	public void deleteTransaction(TransactionVo transVo){
 		
@@ -288,8 +292,12 @@ public class AccountingActivity extends FragmentActivity implements
         return dbAdapter.getExpenseByMonth(now);
     }
 
-    public void updateBudgetBar(){
-        ((InputFragment)mAdapter.getItem(0)).updateBudgetBar();
+    public void updateBudgetBar(String now){
+        ((InputFragment)mAdapter.getItem(0)).updateBudgetBar(getMonthlyBudgetVo(now));
     }
 
+    public MonthlyBudgetVo getMonthlyBudgetVo(String now){
+        return new MonthlyBudgetVo(getMonthlyBudget(), getExpenseByMonth(now));
+
+    }
 }

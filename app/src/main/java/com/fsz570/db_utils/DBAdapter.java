@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.fsz570.easyaccounting.R;
@@ -38,6 +39,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 	private final Context context;
 	private SQLiteDatabase theDataBase;
 	private String DB_PATH;
+    private boolean isParamTableExist = false;
 
 	public DBAdapter(Context _context) {
 		super(_context, DB_NAME, null, DATABASE_VERSION);
@@ -93,7 +95,6 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 
 	public void openDataBase() throws SQLException {
-        Log.d(TAG, "openDataBase()");
         // Open the database
         //String myPath = DB_PATH + DB_NAME;
         String myPath = DB_PATH;
@@ -101,22 +102,24 @@ public class DBAdapter extends SQLiteOpenHelper {
         //If null or not open
         if(null == theDataBase || (null != theDataBase && !theDataBase.isOpen())){
             //Trigger onCreate first
+            Log.d(TAG, "openDataBase()");
+            StrictMode.ThreadPolicy old = StrictMode.getThreadPolicy();
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder(old)
+                    .permitDiskReads()
+                    .build());
             theDataBase = getWritableDatabase();
-//            theDataBase.close();
-//            //Close previous one
-//            theDataBase = SQLiteDatabase.openDatabase(myPath, null,
-//                    SQLiteDatabase.OPEN_READWRITE);
+            StrictMode.setThreadPolicy(old);
         }
 
         //The original code will not trigger onUpgrade
         //The following code should move to onUpgrade after this patch
-        if(!isTableExists(PARAMETER_TABLE)){
+        if(!isTableParamExists()){
             theDataBase.execSQL(createParamTableSql());
             addMonthlyBudgetParam(theDataBase);
+            isParamTableExist = true;
         }
 
         Log.d(TAG, "theDataBase null ? " + (theDataBase==null));
-        Log.d(TAG, "Database version : " + (theDataBase.getVersion()));
 	}
 
 	@Override
@@ -132,7 +135,6 @@ public class DBAdapter extends SQLiteOpenHelper {
 	 * */
 	public void createDataBase() throws IOException {
         Log.d(TAG, "createDataBase()!");
-		//boolean dbExist = checkDataBaseExist();
         boolean dbExist = false;
 
 		if (dbExist) {
@@ -209,7 +211,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 			myOutput = new FileOutputStream(outFileName);
 			Log.d(TAG, "open output file!");
 
-			// transfer bytes from the inputfile to the outputfile
+			// transfer bytes from the input file to the output file
 			byte[] buffer = new byte[1024];
 			int length;
 			while ((length = myInput.read(buffer)) > 0) {
@@ -270,36 +272,45 @@ public class DBAdapter extends SQLiteOpenHelper {
 		//close();
 	}
 	
-	public void deleteEvent(int eventId){
-		Log.d(TAG, "deleteEvent()");
-		
-		openDataBase();
-		
-		//Set transaction event id to null
-		theDataBase.execSQL("UPDATE T_HIS_TRAN SET tran_event_id = NULL WHERE tran_event_id = ? ", new String[]{String.valueOf(eventId)});
-		
-		long rowId = theDataBase.delete(EVENT_TABLE, " _id = ? ", new String[]{String.valueOf(eventId)});
-		Log.d(TAG, "rowId : " + rowId);
+	public void deleteEvent(final int eventId){
 
-		//close();
-	}
-	
-	public void newEvent(String newEventName){
-		Log.d(TAG, "newEvent()");
-		
-		ContentValues cv = new ContentValues();
-		cv.put("event_name",newEventName);
-		cv.put("enabled",EventVo.ENABLED);
-		
-		openDataBase();
-		
-		long rowId = theDataBase.insert(EVENT_TABLE, null, cv);
-		Log.d(TAG, "rowId : " + rowId);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "deleteEvent()");
 
-		//close();
+                openDataBase();
+
+                //Set transaction event id to null
+                theDataBase.execSQL("UPDATE T_HIS_TRAN SET tran_event_id = NULL WHERE tran_event_id = ? ", new String[]{String.valueOf(eventId)});
+
+                long rowId = theDataBase.delete(EVENT_TABLE, " _id = ? ", new String[]{String.valueOf(eventId)});
+                Log.d(TAG, "rowId : " + rowId);
+            }
+        }).start();
 	}
-	
-	public int newParentCategory(String newCategoryName){
+
+    public void newEvent(final String newEventName) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "newEvent()");
+
+                ContentValues cv = new ContentValues();
+                cv.put("event_name", newEventName);
+                cv.put("enabled", EventVo.ENABLED);
+
+                openDataBase();
+
+                long rowId = theDataBase.insert(EVENT_TABLE, null, cv);
+                Log.d(TAG, "rowId : " + rowId);
+            }
+        }).start();
+
+    }
+
+    public int newParentCategory(String newCategoryName){
 		Log.d(TAG, "newParentCategory()");
 		
 		ContentValues cv = new ContentValues();
@@ -311,37 +322,39 @@ public class DBAdapter extends SQLiteOpenHelper {
 		long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
 		Log.d(TAG, "rowId : " + rowId);
 
-		//close();
         return (int)rowId;
 	}
-	
-	public void newChildCategory(int parentId, String newCategoryName){
-		Log.d(TAG, "newChildCategory()");
-		
-		ContentValues cv = new ContentValues();
-		cv.put("parent_id",parentId);
-		cv.put("tran_category_name",newCategoryName);
-		cv.put("seq",getMaxSeqInParentCategory(parentId)+1);
 
-		openDataBase();
-		
-		long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
-		Log.d(TAG, "rowId : " + rowId);
+    public void newChildCategory(final int parentId, final String newCategoryName) {
+        Log.d(TAG, "newChildCategory()");
 
-		//close();
-	}
-	
-	public void updateCategory(int id, String newCategoryName){
-		Log.d(TAG, "updateCategory()");
-		
-		ContentValues cv = new ContentValues();
-		cv.put("tran_category_name",newCategoryName);
+        ContentValues cv = new ContentValues();
+        cv.put("parent_id", parentId);
+        cv.put("tran_category_name", newCategoryName);
+        cv.put("seq", getMaxSeqInParentCategory(parentId) + 1);
 
-		openDataBase();
-		
-		theDataBase.update(CATEGORY_TABLE, cv, " _id = ? ", new String[]{String.valueOf(id)});
+        openDataBase();
 
-		//close();
+        long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
+        Log.d(TAG, "rowId : " + rowId);
+    }
+
+    public void updateCategory(final int id, final String newCategoryName){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "updateCategory()");
+
+                ContentValues cv = new ContentValues();
+                cv.put("tran_category_name",newCategoryName);
+
+                openDataBase();
+
+                theDataBase.update(CATEGORY_TABLE, cv, " _id = ? ", new String[]{String.valueOf(id)});
+            }
+        }).start();
+
 	}
 	
 	private int getMaxSeq(){
@@ -394,25 +407,28 @@ public class DBAdapter extends SQLiteOpenHelper {
 	        } while (cursor.moveToNext());
 	    }
 
-	    // closing connection
+	    // closing cursor
 	    cursor.close();
-	    //close();
-		
+
 		return events;
 	}
 	
-	public void setEventEnable(int eventId, int enabled){
-		Log.d(TAG, "setEventEnable()");
-		
-		ContentValues cv = new ContentValues();
-		cv.put("enabled",enabled);
-		
-		openDataBase();
-		
-		long rowId = theDataBase.update(EVENT_TABLE, cv, " _id = ? ", new String[]{String.valueOf(eventId)});
-		Log.d(TAG, "rowId : " + rowId);
+	public void setEventEnable(final int eventId, final int enabled){
 
-		//close();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "setEventEnable()");
+
+                ContentValues cv = new ContentValues();
+                cv.put("enabled",enabled);
+
+                openDataBase();
+
+                long rowId = theDataBase.update(EVENT_TABLE, cv, " _id = ? ", new String[]{String.valueOf(eventId)});
+                Log.d(TAG, "rowId : " + rowId);
+            }
+        }).start();
 	}
 
 	public List<CategoryVo> getCategories(){
@@ -444,10 +460,9 @@ public class DBAdapter extends SQLiteOpenHelper {
 	    	return categoryList;
 	    }
 
-	    // closing connection
+	    // closing cursor
 	    cursor.close();
-	    //close();
-		
+
 		return categoryList;
 	}
 	
@@ -465,10 +480,9 @@ public class DBAdapter extends SQLiteOpenHelper {
 	        } while (cursor.moveToNext());
 		}
 		
-	    // closing connection
+	    // closing cursor
 	    cursor.close();
-	    //close();
-	    
+
 	    return listCategory;
 	}
 	
@@ -496,10 +510,9 @@ public class DBAdapter extends SQLiteOpenHelper {
 	        } while (cursor.moveToNext());
 	    }
 
-	    // closing connection
+	    // closing cursor
 	    cursor.close();
-	    //close();
-		
+
 		return trans;
 	}
 	
@@ -532,10 +545,9 @@ public class DBAdapter extends SQLiteOpenHelper {
 	        } while (cursor.moveToNext());
 	    }
 
-	    // closing connection
+	    // closing cursor
 	    cursor.close();
-	    //close();
-		
+
 		return trans;
 	}
 	
@@ -568,10 +580,9 @@ public class DBAdapter extends SQLiteOpenHelper {
 	        } while (cursor.moveToNext());
 	    }
 
-	    // closing connection
+	    // closing cursor
 	    cursor.close();
-	    //close();
-		
+
 		return trans;
 	}
 	
@@ -601,50 +612,59 @@ public class DBAdapter extends SQLiteOpenHelper {
 	        } while (cursor.moveToNext());
 	    }
 
-	    // closing connection
+	    // closing cursor
 	    cursor.close();
-	    //close();
-		
+
 		return trans;
 	}
 	
-	public void insertTrans(TransactionVo transVo){
-		Log.d(TAG, "insertTrans()");
-		
-		ContentValues cv = new ContentValues();
-		cv.put("tran_date",transVo.getTranDate());
-		cv.put("tran_category_id",transVo.getTranCategoryId());
-		cv.put("tran_event_id",transVo.getTranEventId());
-		cv.put("tran_amount",transVo.getTranAmount());
-		cv.put("tran_comment",transVo.getTranComment());
-		
-		openDataBase();
-		
-		long rowId = theDataBase.insertOrThrow(TRANS_TABLE, null, cv);
-		Log.d(TAG, "rowId : " + rowId);
+	public void insertTrans(final TransactionVo transVo){
 
-		//close();
-	}
-	
-	public void updateTrans(TransactionVo transVo){
-		Log.d(TAG, "updateTrans()");
-		
-		ContentValues cv = new ContentValues();
-		cv.put("tran_date",transVo.getTranDate());
-		cv.put("tran_category_id",transVo.getTranCategoryId());
-		cv.put("tran_event_id",transVo.getTranEventId());
-		cv.put("tran_amount",transVo.getTranAmount());
-		cv.put("tran_comment",transVo.getTranComment());
-		
-		openDataBase();
-		
-		long rowId = theDataBase.update(TRANS_TABLE, cv, " _id = ? ", new String[]{transVo.getId()+""});
-		Log.d(TAG, "rowId : " + rowId);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "insertTrans()");
 
-		//close();
+                ContentValues cv = new ContentValues();
+                cv.put("tran_date",transVo.getTranDate());
+                cv.put("tran_category_id",transVo.getTranCategoryId());
+                cv.put("tran_event_id",transVo.getTranEventId());
+                cv.put("tran_amount",transVo.getTranAmount());
+                cv.put("tran_comment",transVo.getTranComment());
+
+                openDataBase();
+
+                long rowId = theDataBase.insertOrThrow(TRANS_TABLE, null, cv);
+                Log.d(TAG, "rowId : " + rowId);
+            }
+        }).start();
+
 	}
-	
-	private String getQueryTransactionString(int eventId, int categoryId){
+
+    public void updateTrans(final TransactionVo transVo) {
+        Log.d(TAG, "updateTrans()");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContentValues cv = new ContentValues();
+                cv.put("tran_date", transVo.getTranDate());
+                cv.put("tran_category_id", transVo.getTranCategoryId());
+                cv.put("tran_event_id", transVo.getTranEventId());
+                cv.put("tran_amount", transVo.getTranAmount());
+                cv.put("tran_comment", transVo.getTranComment());
+
+                openDataBase();
+
+                long rowId = theDataBase.update(TRANS_TABLE, cv, " _id = ? ", new String[]{transVo.getId() + ""});
+                Log.d(TAG, "rowId : " + rowId);
+            }
+        }).start();
+
+        //close();
+    }
+
+    private String getQueryTransactionString(int eventId, int categoryId){
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT TRAN._id, TRAN.tran_date, TRAN.tran_category_id, TRAN.tran_event_id, ");
 		sb.append("       TRAN.tran_amount, TRAN.tran_comment, CTGR.tran_category_name, EVNT.event_name");
@@ -660,6 +680,8 @@ public class DBAdapter extends SQLiteOpenHelper {
 		if(categoryId != Consts.NO_CATEGORY_ID){
 			sb.append(" AND ( TRAN.tran_category_id = ? OR CTGR.parent_id = ? ) ");
 		}
+
+        sb.append(" ORDER BY TRAN.tran_date ");
 		
 		return sb.toString();
 	}
@@ -741,23 +763,31 @@ public class DBAdapter extends SQLiteOpenHelper {
 		return sb.toString();
 	}
 	
-	public void deleteTransaction(TransactionVo transVo){
-		openDataBase();
-		theDataBase.delete("T_HIS_TRAN", " _id = ? ", new String[] {transVo.getId()+""});
-		//close();
+	public void deleteTransaction(final TransactionVo transVo){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                openDataBase();
+                theDataBase.delete("T_HIS_TRAN", " _id = ? ", new String[] {transVo.getId()+""});
+            }
+        }).start();
 	}
 	
-	public void updateCategory(int id, int seq){
-		Log.d(TAG, "updateCategory()");
-		
-		ContentValues cv = new ContentValues();
-		cv.put("seq",seq);
-		
-		openDataBase();
-		
-		long rowId = theDataBase.update(CATEGORY_TABLE, cv, " _id = ? ", new String[]{id+""});
+	public void updateCategory(final int id, final int seq){
 
-		//close();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "updateCategory()");
+
+                ContentValues cv = new ContentValues();
+                cv.put("seq",seq);
+
+                openDataBase();
+
+                long rowId = theDataBase.update(CATEGORY_TABLE, cv, " _id = ? ", new String[]{id+""});
+            }
+        }).start();
 	}
 	
 	private String getCommonCategorySql() {
@@ -787,15 +817,22 @@ public class DBAdapter extends SQLiteOpenHelper {
         return sb.toString();
     }
 
-    private void addMonthlyBudgetParam(SQLiteDatabase _db){
-        Log.d(TAG, "addMonthlyBudgetParam()");
+    private void addMonthlyBudgetParam(final SQLiteDatabase _db){
 
-        ContentValues cv = new ContentValues();
-        cv.put("parameter_name",Consts.PARAM_MONTHLY_BUDGET_NAME);
-        cv.put("parameter_value","0");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "addMonthlyBudgetParam()");
 
-        long rowId = _db.insert(PARAMETER_TABLE, null, cv);
-        Log.d(TAG, "rowId : " + rowId);
+                ContentValues cv = new ContentValues();
+                cv.put("parameter_name",Consts.PARAM_MONTHLY_BUDGET_NAME);
+                cv.put("parameter_value","0");
+
+                long rowId = _db.insert(PARAMETER_TABLE, null, cv);
+                Log.d(TAG, "rowId : " + rowId);
+            }
+        }).start();
+
     }
 
     public long getMonthlyBudget(){
@@ -822,15 +859,21 @@ public class DBAdapter extends SQLiteOpenHelper {
         return monthlyBudget;
     }
 
-    public void updateMonthlyBudget(long monthlyBudget){
-        Log.d(TAG, "updateMonthlyBudget()");
+    public void updateMonthlyBudget(final long monthlyBudget){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "updateMonthlyBudget()");
 
-        ContentValues cv = new ContentValues();
-        cv.put("parameter_value",monthlyBudget);
+                ContentValues cv = new ContentValues();
+                cv.put("parameter_value",monthlyBudget);
 
-        openDataBase();
+                openDataBase();
 
-        theDataBase.update(PARAMETER_TABLE, cv, " parameter_name = ? ", new String[]{Consts.PARAM_MONTHLY_BUDGET_NAME});
+                theDataBase.update(PARAMETER_TABLE, cv, " parameter_name = ? ", new String[]{Consts.PARAM_MONTHLY_BUDGET_NAME});
+            }
+        }).start();
+
     }
 
     private String getMonthlyBudgetSql(){
@@ -888,14 +931,21 @@ public class DBAdapter extends SQLiteOpenHelper {
         long pIdCatRecation = newParentCategory(context.getResources().getString(R.string.cat_recreation));
     }
 
-    public boolean isTableExists(String tableName) {
-        Cursor cursor = theDataBase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
-        if(cursor!=null) {
-            if(cursor.getCount()>0) {
+    public boolean isTableParamExists() {
+        if (isParamTableExist == false ) {
+            StrictMode.ThreadPolicy old = StrictMode.getThreadPolicy();
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder(old)
+                    .permitDiskReads()
+                    .build());
+            Cursor cursor = theDataBase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + PARAMETER_TABLE + "'", null);
+            if (cursor != null) {
+                if (cursor.getCount() > 0) {
+                    cursor.close();
+                    return true;
+                }
                 cursor.close();
-                return true;
             }
-            cursor.close();
+            StrictMode.setThreadPolicy(old);
         }
         return false;
     }
