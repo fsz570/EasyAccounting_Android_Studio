@@ -93,18 +93,20 @@ public class UpdateTransactionActivity extends Activity {
 	private void initDB(){
 		Log.d(TAG, "initDB() start");
         //Instant the DB Adapter will create the DB is it not exist.
-		dbAdapter = new DBAdapter(UpdateTransactionActivity.this);
+//		dbAdapter = new DBAdapter(UpdateTransactionActivity.this);
+        dbAdapter = ((EasyMoneyApplication)getApplication()).getDbAdapterInstance();
+        Log.d("DB_OPEN","dbAdapter opened? " + dbAdapter.isOpen());
 
-        // code that needs 6 seconds for execution
-        try{
-            dbAdapter.openDataBase();
-        }catch(Exception e){
-        	Log.d(TAG, "initDB() Exception");
-        	Log.d(TAG, e.getMessage());
-        }finally{
-        	//dbAdapter.close();
-        }
-        // after finishing, close the progress bar
+//        // code that needs 6 seconds for execution
+//        try{
+//            dbAdapter.openDataBase();
+//        }catch(Exception e){
+//        	Log.d(TAG, "initDB() Exception");
+//        	Log.d(TAG, e.getMessage());
+//        }finally{
+//        	//dbAdapter.close();
+//        }
+//        // after finishing, close the progress bar
         Log.d(TAG, "initDB() end.");
 	}
 	

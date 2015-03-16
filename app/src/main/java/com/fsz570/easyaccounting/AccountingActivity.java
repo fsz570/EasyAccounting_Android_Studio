@@ -140,13 +140,15 @@ public class AccountingActivity extends FragmentActivity implements
 	private void initDB(){
 		Log.d(TAG, "initDB()");
         //Instant the DB Adapter will create the DB is it not exist.
-		dbAdapter = new DBAdapter(AccountingActivity.this);
+//		dbAdapter = new DBAdapter(AccountingActivity.this);
+        dbAdapter = ((EasyMoneyApplication)getApplication()).getDbAdapterInstance();
+        Log.d("DB_OPEN","dbAdapter opened? " + dbAdapter.isOpen());
 
         try{
-            if(!dbAdapter.checkDataBaseExist()) {
-                dbAdapter.createDataBase();
-            }
-            dbAdapter.openDataBase();
+//            if(!dbAdapter.checkDataBaseExist()) {
+//                dbAdapter.createDataBase();
+//            }
+//            dbAdapter.openDataBase();
             initData();
 
         }catch(Exception e){

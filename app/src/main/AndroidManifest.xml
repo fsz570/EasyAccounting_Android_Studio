@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fsz570.easyaccounting"
-    android:installLocation="auto"
-    android:versionCode="6"
-    android:versionName="1.0.4" >
+    android:installLocation="preferExternal"
+    android:versionCode="7"
+    android:versionName="1.0.5" >
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
@@ -13,6 +13,7 @@
         android:allowClearUserData="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
+        android:name=".EasyMoneyApplication"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".AccountingActivity"

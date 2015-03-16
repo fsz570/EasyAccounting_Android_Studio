@@ -53,18 +53,20 @@ public class UpdateBudgetActivity extends Activity {
     private void initDB(){
         Log.d(TAG, "initDB() start");
         //Instant the DB Adapter will create the DB is it not exist.
-        dbAdapter = new DBAdapter(this);
+//        dbAdapter = new DBAdapter(this);
+        dbAdapter = ((EasyMoneyApplication)getApplication()).getDbAdapterInstance();
+        Log.d("DB_OPEN","dbAdapter opened? " + dbAdapter.isOpen());
 
-        // code that needs 6 seconds for execution
-        try{
-            dbAdapter.openDataBase();
-        }catch(Exception e){
-            Log.d(TAG, "initDB() Exception");
-            Log.d(TAG, e.getMessage());
-        }finally{
-            //dbAdapter.close();
-        }
-        // after finishing, close the progress bar
+//        // code that needs 6 seconds for execution
+//        try{
+//            dbAdapter.openDataBase();
+//        }catch(Exception e){
+//            Log.d(TAG, "initDB() Exception");
+//            Log.d(TAG, e.getMessage());
+//        }finally{
+//            //dbAdapter.close();
+//        }
+//        // after finishing, close the progress bar
         Log.d(TAG, "initDB() end.");
     }
 
@@ -74,6 +76,7 @@ public class UpdateBudgetActivity extends Activity {
         btnConfirm = (Button) findViewById(R.id.btn_confirm);
         btnCancel = (Button) findViewById(R.id.btn_cancel);
         etMonthlyBidget = (EditText)findViewById(R.id.et_monthly_budget);
+        Log.d("DB_OPEN","dbAdapter opened? " + dbAdapter.isOpen());
         etMonthlyBidget.setText(""+dbAdapter.getMonthlyBudget());
 
         btnConfirm.setOnClickListener(clickListener);
@@ -89,6 +92,7 @@ public class UpdateBudgetActivity extends Activity {
                     finish();
                     break;
                 case R.id.btn_confirm :
+                    Log.d("DB_OPEN","dbAdapter opened? " + dbAdapter.isOpen());
                     dbAdapter.updateMonthlyBudget(getMonthlyBudget());
                     Toast.makeText(getBaseContext(), getResources().getString(R.string.update_budget_success), Toast.LENGTH_SHORT).show();
                     finish();

@@ -1,13 +1,6 @@
 package com.fsz570.easyaccounting.adapter;
 
-import java.util.List;
-
-import com.fsz570.easyaccounting.R;
-import com.fsz570.easyaccounting.UpdateCategoryActivity;
-import com.fsz570.easyaccounting.vo.CategoryVo;
-
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +9,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.fsz570.easyaccounting.R;
+import com.fsz570.easyaccounting.UpdateCategoryActivity;
+import com.fsz570.easyaccounting.vo.CategoryVo;
+
+import java.util.List;
 
 public class CategoryExpandableListAdapter extends BaseExpandableListAdapter {
 	
@@ -75,8 +74,6 @@ public class CategoryExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
 	        boolean isLastChild, View convertView, ViewGroup parent) {
-		
-		Log.d(TAG, "getChildView() : groupPosition : " + groupPosition + "; childPosition : " + childPosition);
 
 	    View v = convertView;
 
@@ -148,8 +145,6 @@ public class CategoryExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(final int groupPosition, final boolean isExpanded,
 			final View convertView, final ViewGroup parent) {
-		
-		Log.d(TAG, "getGroupView() : groupPosition : " + groupPosition);
 
 	    View v = convertView;
 
@@ -246,9 +241,7 @@ public class CategoryExpandableListAdapter extends BaseExpandableListAdapter {
 	};
 
 	private void swapPosition(CategoryVo vo, int direction) {
-		
-		Log.d(TAG, "swapPosition()");
-		
+
 		if(vo.isParent()){
 			if(vo.getParentPosition() == 1 && direction == UP){
 				return; //Do nothing

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.StrictMode;
 import android.util.Log;
@@ -17,11 +16,6 @@ import com.fsz570.easyaccounting.vo.EventVo;
 import com.fsz570.easyaccounting.vo.PieChartDataVo;
 import com.fsz570.easyaccounting.vo.TransactionVo;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,15 +32,16 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	private final Context context;
 	private SQLiteDatabase theDataBase;
-	private String DB_PATH;
+    private static DBAdapter mInstance = null;
+
     private boolean isParamTableExist = false;
 
 	public DBAdapter(Context _context) {
 		super(_context, DB_NAME, null, DATABASE_VERSION);
 		context = _context;
-		File outFile = context.getDatabasePath(DB_NAME);
-		DB_PATH = outFile.getPath() ;
-		Log.d(TAG, "DB_PATH : " + DB_PATH);
+//		File outFile = context.getDatabasePath(DB_NAME);
+//		DB_PATH = outFile.getPath() ;
+//		Log.d(TAG, "DB_PATH : " + DB_PATH);
 	}
 
 	// Called when no database exists in
@@ -54,19 +49,13 @@ public class DBAdapter extends SQLiteOpenHelper {
 	// to create a new one.
 	@Override
 	public void onCreate(SQLiteDatabase _db) {
-        Log.d(TAG, "DBAdapter.onCreate()");
+        Log.d(TAG, "onCreate()");
 
-//		try {
-//			// Try to copy predefined db
-//
-//            Log.d(TAG, "DB not exist! copy from assets.");
-////            copyDataBase();
-//		} catch (IOException e) {
-//            throw new Error("Error copying database");
-//        } catch (Exception e) {
-//			Log.e(TAG, "DBAdapter.onCreate():" + e.getMessage());
-//			Log.d(TAG, "Copy DB Fail, create new one.");
-//		}
+        _db.execSQL(createCategoryTableSql());
+        _db.execSQL(createEventTableSql());
+        _db.execSQL(createTransTableSql());
+        _db.execSQL(createParamTableSql());
+        addMonthlyBudgetParam(_db);
 	}
 
 	// Called when there is a database version mismatch meaning that
@@ -94,10 +83,24 @@ public class DBAdapter extends SQLiteOpenHelper {
 
 	}
 
-	public void openDataBase() throws SQLException {
+    public static DBAdapter getInstance(Context ctx) {
+        if (mInstance == null) {
+            mInstance = new DBAdapter(ctx.getApplicationContext());
+        }
+        return mInstance;
+    }
+
+    public boolean isOpen(){
+        if(null == theDataBase || (null != theDataBase && !theDataBase.isOpen())){
+            return false;
+        }
+        return true;
+    }
+
+    public void openDataBase() throws SQLException {
         // Open the database
         //String myPath = DB_PATH + DB_NAME;
-        String myPath = DB_PATH;
+//        String myPath = DB_PATH;
 
         //If null or not open
         if(null == theDataBase || (null != theDataBase && !theDataBase.isOpen())){
@@ -110,16 +113,6 @@ public class DBAdapter extends SQLiteOpenHelper {
             theDataBase = getWritableDatabase();
             StrictMode.setThreadPolicy(old);
         }
-
-        //The original code will not trigger onUpgrade
-        //The following code should move to onUpgrade after this patch
-        if(!isTableParamExists()){
-            theDataBase.execSQL(createParamTableSql());
-            addMonthlyBudgetParam(theDataBase);
-            isParamTableExist = true;
-        }
-
-        Log.d(TAG, "theDataBase null ? " + (theDataBase==null));
 	}
 
 	@Override
@@ -133,28 +126,28 @@ public class DBAdapter extends SQLiteOpenHelper {
 	 * Creates a empty database on the system and rewrites it with your own
 	 * database.
 	 * */
-	public void createDataBase() throws IOException {
-        Log.d(TAG, "createDataBase()!");
-        boolean dbExist = false;
-
-		if (dbExist) {
-			// do nothing - database already exist
-			Log.d(TAG, "DB Exist!");
-		} else {
-			// By calling this method and empty database will be created into
-			// the default system path
-			// of your application so we are gonna be able to overwrite that
-			// database with our database.
-			this.getReadableDatabase();
-
-			try {
-				Log.d(TAG, "DB not exist! copy from assets.");
-				copyDataBase();
-			} catch (IOException e) {
-				throw new Error("Error copying database");
-			}
-		}
-	}
+//	public void createDataBase() throws IOException {
+//        Log.d(TAG, "createDataBase()!");
+//        boolean dbExist = false;
+//
+//		if (dbExist) {
+//			// do nothing - database already exist
+//			Log.d(TAG, "DB Exist!");
+//		} else {
+//			// By calling this method and empty database will be created into
+//			// the default system path
+//			// of your application so we are gonna be able to overwrite that
+//			// database with our database.
+//			this.getReadableDatabase();
+//
+//			try {
+//				Log.d(TAG, "DB not exist! copy from assets.");
+//				copyDataBase();
+//			} catch (IOException e) {
+//				throw new Error("Error copying database");
+//			}
+//		}
+//	}
 
 
 	/**
@@ -163,71 +156,71 @@ public class DBAdapter extends SQLiteOpenHelper {
 	 * 
 	 * @return true if it exists, false if it doesn't
 	 */
-	public boolean checkDataBaseExist() {
-		SQLiteDatabase checkDB = null;
-		Log.d(TAG, "checkDataBaseExist()!");
-
-		try {
-//			String myPath = DB_PATH + DB_NAME;
-//			Log.d(TAG, "DB_PATH = " + DB_PATH);
-//			Log.d(TAG, "myPath  = " + myPath);
-			checkDB = SQLiteDatabase.openDatabase(DB_PATH, null,
-					SQLiteDatabase.OPEN_READONLY);
-		} catch (SQLiteException e) {
-			// database does't exist yet.
-			Log.e(TAG, e.getMessage());
-		}
-
-		if (checkDB != null) {
-			Log.d(TAG, "DB Exists!");
-            checkDB.close();
-		}else{
-			Log.d(TAG, "DB not exists!");
-		}
-
-		return checkDB != null ? true : false;
-	}
+//	public boolean checkDataBaseExist() {
+//		SQLiteDatabase checkDB = null;
+//		Log.d(TAG, "checkDataBaseExist()!");
+//
+//		try {
+////			String myPath = DB_PATH + DB_NAME;
+////			Log.d(TAG, "DB_PATH = " + DB_PATH);
+////			Log.d(TAG, "myPath  = " + myPath);
+//			checkDB = SQLiteDatabase.openDatabase(DB_PATH, null,
+//					SQLiteDatabase.OPEN_READONLY);
+//		} catch (SQLiteException e) {
+//			// database does't exist yet.
+//			Log.e(TAG, e.getMessage());
+//		}
+//
+//		if (checkDB != null) {
+//			Log.d(TAG, "DB Exists!");
+//            checkDB.close();
+//		}else{
+//			Log.d(TAG, "DB not exists!");
+//		}
+//
+//		return checkDB != null ? true : false;
+//	}
 
 	/**
 	 * Copies your database from your local assets-folder to the just created
 	 * empty database in the system folder, from where it can be accessed and
 	 * handled. This is done by transfering bytestream.
 	 * */
-	private void copyDataBase() throws IOException {
-        Log.d(TAG, "copyDataBase()!");
-
-		InputStream myInput = null;
-		OutputStream myOutput = null;
-		
-		// Open your local db as the input stream
-		try{
-			myInput = context.getAssets().open(DB_NAME);
-			// Path to the just created empty db
-			//String outFileName = DB_PATH + DB_NAME;
-			String outFileName = DB_PATH;
-			Log.d(TAG, "outFileName = " + outFileName);
-			// Open the empty db as the output stream
-			//Log.d(TAG, "External DIR : " + context.getExternalFilesDir(null).getAbsolutePath());
-			myOutput = new FileOutputStream(outFileName);
-			Log.d(TAG, "open output file!");
-
-			// transfer bytes from the input file to the output file
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = myInput.read(buffer)) > 0) {
-				myOutput.write(buffer, 0, length);
-				Log.d(TAG, "write output file!");
-			}
-		}catch(Exception e){
-			Log.e(TAG, e.getMessage());
-		}finally{
-			// Close the streams
-			myOutput.flush();
-			myOutput.close();
-			myInput.close();
-		}
-
-	}
+//	private void copyDataBase() throws IOException {
+//        Log.d(TAG, "copyDataBase()!");
+//
+//		InputStream myInput = null;
+//		OutputStream myOutput = null;
+//
+//		// Open your local db as the input stream
+//		try{
+//			myInput = context.getAssets().open(DB_NAME);
+//			// Path to the just created empty db
+//			//String outFileName = DB_PATH + DB_NAME;
+//			String outFileName = DB_PATH;
+//			Log.d(TAG, "outFileName = " + outFileName);
+//			// Open the empty db as the output stream
+//			//Log.d(TAG, "External DIR : " + context.getExternalFilesDir(null).getAbsolutePath());
+//			myOutput = new FileOutputStream(outFileName);
+//			Log.d(TAG, "open output file!");
+//
+//			// transfer bytes from the input file to the output file
+//			byte[] buffer = new byte[1024];
+//			int length;
+//			while ((length = myInput.read(buffer)) > 0) {
+//				myOutput.write(buffer, 0, length);
+//				Log.d(TAG, "write output file!");
+//			}
+//		}catch(Exception e){
+//			Log.e(TAG, e.getMessage());
+//		}finally{
+//			// Close the streams
+//			myOutput.flush();
+//			myOutput.close();
+//			myInput.close();
+//		}
+//
+//	}
 
 	//***************************************************	
 	//                 Customizer method
@@ -312,13 +305,13 @@ public class DBAdapter extends SQLiteOpenHelper {
 
     public int newParentCategory(String newCategoryName){
 		Log.d(TAG, "newParentCategory()");
-		
+
 		ContentValues cv = new ContentValues();
 		cv.put("tran_category_name",newCategoryName);
 		cv.put("seq",getMaxSeq()+1);
 
 		openDataBase();
-		
+
 		long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
 		Log.d(TAG, "rowId : " + rowId);
 
@@ -326,17 +319,23 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 
     public void newChildCategory(final int parentId, final String newCategoryName) {
-        Log.d(TAG, "newChildCategory()");
 
-        ContentValues cv = new ContentValues();
-        cv.put("parent_id", parentId);
-        cv.put("tran_category_name", newCategoryName);
-        cv.put("seq", getMaxSeqInParentCategory(parentId) + 1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "newChildCategory()");
 
-        openDataBase();
+                ContentValues cv = new ContentValues();
+                cv.put("parent_id", parentId);
+                cv.put("tran_category_name", newCategoryName);
+                cv.put("seq", getMaxSeqInParentCategory(parentId) + 1);
 
-        long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
-        Log.d(TAG, "rowId : " + rowId);
+                openDataBase();
+
+                long rowId = theDataBase.insert(CATEGORY_TABLE, null, cv);
+                Log.d(TAG, "rowId : " + rowId);
+            }
+        }).start();
     }
 
     public void updateCategory(final int id, final String newCategoryName){
@@ -431,10 +430,10 @@ public class DBAdapter extends SQLiteOpenHelper {
         }).start();
 	}
 
-	public List<CategoryVo> getCategories(){
+	public ArrayList<CategoryVo> getCategories(){
 		Log.d(TAG, "getCategories()!");
-		
-		List<CategoryVo> categoryList = new ArrayList<CategoryVo>();
+
+        ArrayList<CategoryVo> categoryList = new ArrayList<CategoryVo>();
 		
 		openDataBase();
 		Cursor cursor = null;
@@ -444,7 +443,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		
 	    if ( cursor.moveToFirst () ) {
 	        do {
-	        	Log.d(TAG, "Category : " + cursor.getString(2) + "; Seq : " + cursor.getInt(4));
+//	        	Log.d(TAG, "Category : " + cursor.getString(2) + "; Seq : " + cursor.getInt(4));
 	        	CategoryVo parentCategoryVo = new CategoryVo(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4));
 	        	categoryList.add(parentCategoryVo);
 	        	
@@ -806,10 +805,45 @@ public class DBAdapter extends SQLiteOpenHelper {
 		return sb.toString();
 	}
 
+    private String createCategoryTableSql(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("CREATE TABLE IF NOT EXISTS ").append(CATEGORY_TABLE).append("(")
+                .append(" _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ")
+                .append(" parent_id INTEGER, ")
+                .append(" tran_category_name TEXT NOT NULL, ")
+                .append(" category_icon_id TEXT, ")
+                .append(" seq INTEGER ")
+                .append(")");
+        return sb.toString();
+    }
+
+    private String createEventTableSql(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("CREATE TABLE IF NOT EXISTS ").append(EVENT_TABLE).append("(")
+                .append(" _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ")
+                .append(" event_name TEXT NOT NULL, ")
+                .append(" enabled INTEGER NOT NULL DEFAULT 1 ")
+                .append(")");
+        return sb.toString();
+    }
+
+    private String createTransTableSql(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("CREATE TABLE IF NOT EXISTS ").append(TRANS_TABLE).append("(")
+                .append(" _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ")
+                .append(" tran_date TEXT NOT NULL, ")
+                .append(" tran_category_id INTEGER NOT NULL, ")
+                .append(" tran_event_id INTEGER, ")
+                .append(" tran_amount REAL NOT NULL, ")
+                .append(" tran_comment TEXT ")
+                .append(")");
+        return sb.toString();
+    }
+
     private String createParamTableSql(){
         StringBuffer sb = new StringBuffer();
 
-        sb.append("CREATE TABLE ").append(PARAMETER_TABLE).append("(")
+        sb.append("CREATE TABLE IF NOT EXISTS ").append(PARAMETER_TABLE).append("(")
                 .append(" _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ")
                 .append(" parameter_name TEXT NOT NULL, ")
                 .append(" parameter_value TEXT NOT NULL ")
@@ -865,10 +899,15 @@ public class DBAdapter extends SQLiteOpenHelper {
             public void run() {
                 Log.d(TAG, "updateMonthlyBudget()");
 
+                openDataBase();
+                if(!isTableParamExists()){
+                    theDataBase.execSQL(createParamTableSql());
+                    addMonthlyBudgetParam(theDataBase);
+                    isParamTableExist = true;
+                }
+
                 ContentValues cv = new ContentValues();
                 cv.put("parameter_value",monthlyBudget);
-
-                openDataBase();
 
                 theDataBase.update(PARAMETER_TABLE, cv, " parameter_name = ? ", new String[]{Consts.PARAM_MONTHLY_BUDGET_NAME});
             }
@@ -937,6 +976,7 @@ public class DBAdapter extends SQLiteOpenHelper {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder(old)
                     .permitDiskReads()
                     .build());
+            openDataBase();
             Cursor cursor = theDataBase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + PARAMETER_TABLE + "'", null);
             if (cursor != null) {
                 if (cursor.getCount() > 0) {

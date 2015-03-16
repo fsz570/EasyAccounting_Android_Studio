@@ -157,7 +157,7 @@ public class fszDatePicker extends TableLayout {
 	private void changeDate(int days) {
 		Calendar c = Calendar.getInstance();
 
-		String nowDate = (String) dateText.getText();
+		String nowDate = dateText.getText().toString();
 
 		try {
 			c.setTime(sdf.parse(nowDate));

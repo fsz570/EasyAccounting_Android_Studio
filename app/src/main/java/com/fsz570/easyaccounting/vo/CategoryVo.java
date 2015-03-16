@@ -2,7 +2,6 @@ package com.fsz570.easyaccounting.vo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,7 +123,7 @@ public class CategoryVo implements Parcelable{
 	}
 
 	public boolean isShowUpBtn() {
-		Log.d(TAG, "_id : " + _id);
+//		Log.d(TAG, "_id : " + _id);
 		if(_id == NEW_CATEGORY_ID){
 			return false;
 		}else{

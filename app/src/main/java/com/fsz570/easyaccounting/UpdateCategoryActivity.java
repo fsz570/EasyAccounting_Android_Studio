@@ -7,6 +7,8 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -26,11 +28,13 @@ import com.fsz570.easyaccounting.adapter.CategoryExpandableListAdapter;
 import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateCategoryActivity extends Activity {
 
 	private static final String TAG = "UpdateCategoryActivity";
+    private static final int NEW_CHILD_CATEGORY = 1;
 
 	// Database
 	DBAdapter dbAdapter = null;
@@ -365,12 +369,19 @@ public class UpdateCategoryActivity extends Activity {
 	}
 
     public void doNewChildCategoryClick(final int parentId, final String newCategoryName) {
-        // Do stuff here.
+        //Try to use separate thread and message handler here
         new Thread(new Runnable() {
             @Override
             public void run() {
                 dbAdapter.newChildCategory(parentId, newCategoryName);
-                listViewAdapter.setDataSource(dbAdapter.getCategories()); //Refresh after update
+                dbAdapter.getCategories(); //Refresh after update
+
+                Message msgObj = handler.obtainMessage();
+                msgObj.what = NEW_CHILD_CATEGORY;
+                Bundle b = new Bundle();
+                b.putParcelableArrayList("categoryList", dbAdapter.getCategories());
+                msgObj.setData(b);
+                handler.sendMessage(msgObj);
             }
         }).start();
     }
@@ -380,6 +391,22 @@ public class UpdateCategoryActivity extends Activity {
 		dbAdapter.updateCategory(id, newCategoryName);
 		listViewAdapter.setDataSource(dbAdapter.getCategories()); //Refresh after update
 	}
+
+    private final Handler handler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg){
+            Log.d(TAG, "handleMessage");
+            switch(msg.what){
+                case NEW_CHILD_CATEGORY:
+                    ArrayList<CategoryVo> categoryList = msg.getData().getParcelableArrayList("categoryList");
+                    listViewAdapter.setDataSource(categoryList); //Refresh after update
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    };
 	
 	public void doCancelClick() {
 	    // Do stuff here.
@@ -428,18 +455,20 @@ public class UpdateCategoryActivity extends Activity {
 	private void initDB() {
 		Log.d(TAG, "initDB() start");
 		// Instant the DB Adapter will create the DB is it not exist.
-		dbAdapter = new DBAdapter(UpdateCategoryActivity.this);
+//		dbAdapter = new DBAdapter(UpdateCategoryActivity.this);
+        dbAdapter = ((EasyMoneyApplication)getApplication()).getDbAdapterInstance();
+        Log.d("DB_OPEN","dbAdapter opened? " + dbAdapter.isOpen());
 
-		// code that needs 6 seconds for execution
-		try {
-            dbAdapter.openDataBase();
-		} catch (Exception e) {
-			Log.d(TAG, "initDB() Exception");
-			Log.d(TAG, e.getMessage());
-		} finally {
-			//dbAdapter.close();
-		}
-		// after finishing, close the progress bar
+//		// code that needs 6 seconds for execution
+//		try {
+//            dbAdapter.openDataBase();
+//		} catch (Exception e) {
+//			Log.d(TAG, "initDB() Exception");
+//			Log.d(TAG, e.getMessage());
+//		} finally {
+//			//dbAdapter.close();
+//		}
+//		// after finishing, close the progress bar
 		Log.d(TAG, "initDB() end.");
 	}
 
