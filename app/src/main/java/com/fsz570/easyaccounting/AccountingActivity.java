@@ -18,7 +18,6 @@ import android.widget.Spinner;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.TabsPagerAdapter;
-import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.EventVo;
 import com.fsz570.easyaccounting.vo.MonthlyBudgetVo;
 import com.fsz570.easyaccounting.vo.PieChartDataVo;
@@ -50,7 +49,7 @@ public class AccountingActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
         if (BuildConfig.DEBUG) {
-            Utils.enableStrictMode();
+//            Utils.enableStrictMode();
         }
         super.onCreate(savedInstanceState);
 
@@ -238,13 +237,21 @@ public class AccountingActivity extends FragmentActivity implements
 		return this.dbAdapter;
 	}
 	
-	public void insertTrans(TransactionVo transVo){
+	public MonthlyBudgetVo insertTrans(TransactionVo transVo){
 		
 		try{
 			dbAdapter.insertTrans(transVo);
+
+            String now = transVo.getTranDate();
+            long monthlyBudget = getMonthlyBudget();
+            long monthlyExpense = getExpenseByMonth(now);
+
+            return new MonthlyBudgetVo(monthlyBudget, monthlyExpense);
 		}catch(Exception e){
 			Log.d(TAG, "insertTrans fail : " + e.getMessage());
 		}
+
+        return null;
 	}
 	
 	public List<TransactionVo> queryTrans(int eventId, int categoryId){
@@ -292,10 +299,6 @@ public class AccountingActivity extends FragmentActivity implements
 
     public long getExpenseByMonth(String now){
         return dbAdapter.getExpenseByMonth(now);
-    }
-
-    public void updateBudgetBar(String now){
-        ((InputFragment)mAdapter.getItem(0)).updateBudgetBar(getMonthlyBudgetVo(now));
     }
 
     public MonthlyBudgetVo getMonthlyBudgetVo(String now){

@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.CategoryExpandableListAdapter;
-import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 
 import java.util.ArrayList;
@@ -35,6 +34,8 @@ public class UpdateCategoryActivity extends Activity {
 
 	private static final String TAG = "UpdateCategoryActivity";
     private static final int NEW_CHILD_CATEGORY = 1;
+	private static final int UPDATE_CATEGORY_ITEM_ID = 1;
+	private static final int REMOVE_CATEGORY_ITEM_ID = 2;
 
 	// Database
 	DBAdapter dbAdapter = null;
@@ -50,7 +51,7 @@ public class UpdateCategoryActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
-            Utils.enableStrictMode();
+//            Utils.enableStrictMode();
         }
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_update_category);
@@ -192,14 +193,16 @@ public class UpdateCategoryActivity extends Activity {
 	    if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 	    	CategoryVo groupCategory = categoryList.get(groupPosition);
 	        menu.setHeaderTitle(groupCategory.getTranCategoryName());
-	        menu.add(Menu.NONE, Menu.NONE, 1, context.getString(R.string.update_category));
+	        menu.add(Menu.NONE, UPDATE_CATEGORY_ITEM_ID, 1, context.getString(R.string.update_category));
+			menu.add(Menu.NONE, REMOVE_CATEGORY_ITEM_ID, 2, context.getString(R.string.remove_category));
 
 	        // Show context menu for children
 	    } else if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 	    	CategoryVo groupCategory = categoryList.get(groupPosition);
 	    	CategoryVo childCategory = groupCategory.getChildCategory().get(childPosition);
 	        menu.setHeaderTitle(childCategory.getTranCategoryName());
-	        menu.add(Menu.NONE, Menu.NONE, 1, context.getString(R.string.update_category));
+	        menu.add(Menu.NONE, UPDATE_CATEGORY_ITEM_ID, 1, context.getString(R.string.update_category));
+			menu.add(Menu.NONE, REMOVE_CATEGORY_ITEM_ID, 2, context.getString(R.string.remove_category));
 	    }
 	}
 	
@@ -215,12 +218,21 @@ public class UpdateCategoryActivity extends Activity {
 	    if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 	        // do something with parent
 	    	//Toast.makeText(context, "Group : " + groupPosition, Toast.LENGTH_SHORT).show();
-	    	showUpdateGroupCategoryDialog(categoryList.get(groupPosition));
+			if(item.getItemId() == UPDATE_CATEGORY_ITEM_ID) {
+				showUpdateGroupCategoryDialog(categoryList.get(groupPosition));
+			}else if(item.getItemId() == REMOVE_CATEGORY_ITEM_ID){
+				showDeleteGroupCategoryDialog(categoryList.get(groupPosition));
+			}
 
 	    } else if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 	        // do something with child
 	    	//Toast.makeText(context, "Group : " + groupPosition + ", Child : " + childPosition, Toast.LENGTH_SHORT).show();
-	    	showUpdateGroupCategoryDialog(categoryList.get(groupPosition).getChildCategory().get(childPosition));
+
+			if(item.getItemId() == UPDATE_CATEGORY_ITEM_ID) {
+				showUpdateGroupCategoryDialog(categoryList.get(groupPosition).getChildCategory().get(childPosition));
+			}else if(item.getItemId() == REMOVE_CATEGORY_ITEM_ID){
+				showDeleteGroupCategoryDialog(categoryList.get(groupPosition).getChildCategory().get(childPosition));
+			}
 	    }
 
 	    return super.onContextItemSelected(item);
@@ -430,12 +442,23 @@ public class UpdateCategoryActivity extends Activity {
 	            R.string.action_update_category_title, false, NO_VALUE, true, originalCategoryVo);
 	    newFragment.show(getFragmentManager(), "dialog");
 	}
+
+	public void showDeleteGroupCategoryDialog(CategoryVo originalCategoryVo) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		String deleteMessage = String.format("%s [%s] ?",
+				context.getString(R.string.remove_category_confirm_message), originalCategoryVo.getTranCategoryName());
+
+		DialogFragment newFragment = RemoveCategoryAlertDialogFragment.newInstance(
+				deleteMessage, originalCategoryVo.getId());
+		newFragment.show(getFragmentManager(), "removeCategoryDialog");
+	}
+
 	
-	public void updateCategorySeq(List<CategoryVo> paretnCategoryList){
+	public void updateCategorySeq(List<CategoryVo> parentCategoryList){
 		
 		int parentIndex = 0;
 		int childIndex = 0;
-		for(CategoryVo parentCategoryVo:paretnCategoryList){
+		for(CategoryVo parentCategoryVo:parentCategoryList){
 			
 			for(CategoryVo childCategoryVo:parentCategoryVo.getChildCategory()){
 				if(childCategoryVo.getId() != CategoryVo.NEW_CATEGORY_ID){
@@ -479,6 +502,61 @@ public class UpdateCategoryActivity extends Activity {
 	public void setDbAdapter(DBAdapter dbAdapter) {
 		this.dbAdapter = dbAdapter;
 	}
-	
-	
+
+	public static class RemoveCategoryAlertDialogFragment extends DialogFragment {
+
+		public static RemoveCategoryAlertDialogFragment newInstance(String message, int categoryId) {
+			RemoveCategoryAlertDialogFragment frag = new RemoveCategoryAlertDialogFragment();
+			Bundle args = new Bundle();
+			args.putString("message", message);
+			args.putInt("categoryId", categoryId);
+			frag.setArguments(args);
+			return frag;
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			final String message = getArguments().getString("message");
+			final int categoryId = getArguments().getInt("categoryId");
+
+			return new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.remove_category)
+					.setMessage(message)
+					.setPositiveButton(R.string.btn_confirm_text,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									((UpdateCategoryActivity) getActivity()).doRemoveCategory(categoryId);
+								}
+							}
+					)
+					.setNegativeButton(R.string.btn_cancel_text,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									dialog.dismiss();
+								}
+							}
+					)
+					.create();
+		}
+	}
+
+	private void doRemoveCategory(int removeCategoryId){
+
+		CategoryVo categoryVo = dbAdapter.getCategoryById(removeCategoryId);
+		if(categoryVo != null) {
+			int trxCountInDeletedCategory = dbAdapter.removeCategory(removeCategoryId);
+
+			if (trxCountInDeletedCategory > 0) {
+				String removeCategoryMsg = String.format(context.getString(R.string.remove_category_msg_1),
+						categoryVo.getTranCategoryName());
+				Toast.makeText(this, removeCategoryMsg, Toast.LENGTH_LONG).show();
+			} else {
+				String removeCategoryMsg = String.format(context.getString(R.string.remove_category_msg_0),
+						categoryVo.getTranCategoryName());
+				Toast.makeText(this, removeCategoryMsg, Toast.LENGTH_LONG).show();
+			}
+
+			listViewAdapter.setDataSource(dbAdapter.getCategories()); //Refresh after update
+		}
+	}
 }

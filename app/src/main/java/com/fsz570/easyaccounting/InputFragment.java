@@ -111,7 +111,29 @@ public class InputFragment extends Fragment {
         final long monthlyBudget = vo.getMonthlyBudget();
         final long expenseThisMonth = vo.getMonthlyExpense();
 
-        parentActivity.runOnUiThread(new Runnable() {
+        if (monthlyBudget > 0) {
+            budgetLayout.setVisibility(View.VISIBLE);
+            tvBudget.setText(expenseThisMonth + " / " + monthlyBudget);
+
+            budgetLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+            int budgetLayoutWidth = budgetLayout.getMeasuredWidth();
+
+            Log.d(TAG, "budgetLayoutWidth : " + budgetLayoutWidth);
+            Log.d(TAG, "expenseThisMonth : " + expenseThisMonth);
+            Log.d(TAG, "monthlyBudget : " + monthlyBudget);
+
+            if (expenseThisMonth < monthlyBudget) {
+                ivExpense.getLayoutParams().width = (int) (budgetLayoutWidth * expenseThisMonth / monthlyBudget);
+            } else {
+                ivExpense.getLayoutParams().width = budgetLayoutWidth;
+            }
+        } else {
+            budgetLayout.setVisibility(View.GONE);
+        }
+
+/*        parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (monthlyBudget > 0) {
@@ -136,7 +158,7 @@ public class InputFragment extends Fragment {
                     budgetLayout.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
     }
 
     private void initEventSpinner(){
@@ -268,9 +290,9 @@ public class InputFragment extends Fragment {
 					case R.id.cal_btn_insert :
 						Toast.makeText(parentActivity, getResources().getString(R.string.insert_transaction_success),
 								Toast.LENGTH_LONG).show();
-                        new insertTransInBackground().execute(genTransVo());
-//                        parentActivity.insertTrans(genTransVo());
-//                        updateBudgetBar();
+//                        new insertTransInBackground().execute(genTransVo());
+                        MonthlyBudgetVo vo = parentActivity.insertTrans(genTransVo());
+                        updateBudgetBar(vo);
                         calCalculationInput.setText("");
                         ((EditText)rootView.findViewById(R.id.transaction_item_comment)).setText("");
                         v.requestFocus();
@@ -321,19 +343,26 @@ public class InputFragment extends Fragment {
 
         @Override
         protected MonthlyBudgetVo doInBackground(TransactionVo... vo){
-            String now = vo[0].getTranDate();
-            parentActivity.insertTrans(vo[0]);
-            long monthlyBudget = parentActivity.getMonthlyBudget();
-            long monthlyExpense = parentActivity.getExpenseByMonth(now);
+            try {
+                String now = vo[0].getTranDate();
+                parentActivity.insertTrans(vo[0]);
+                long monthlyBudget = parentActivity.getMonthlyBudget();
+                long monthlyExpense = parentActivity.getExpenseByMonth(now);
 
-            return new MonthlyBudgetVo(monthlyBudget, monthlyExpense);
+                return new MonthlyBudgetVo(monthlyBudget, monthlyExpense);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
         }
 
         @Override
         protected void onPostExecute(MonthlyBudgetVo vo){
             super.onPostExecute(vo);
 
-            updateBudgetBar(vo);
+            if(vo != null) {
+                updateBudgetBar(vo);
+            }
         }
     }
 

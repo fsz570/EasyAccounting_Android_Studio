@@ -80,6 +80,7 @@
     <string name="setting_btn_event_disable_text">停用</string>
     <string name="action_new_event_title">新增標籤</string>
     <string name="edit_text_new_event">按此新增標籤</string>
+    <string name="input_new_event_here">在此輸入新增標籤</string>
 
     <!-- Setting Category -->
     <string name="setting_btn_category_text">分類</string>
@@ -95,6 +96,10 @@
     <string name="edit_text_new_sub_category">按此新增次分類</string>
     <string name="update_category">更新</string>
     <string name="remove_category">刪除</string>
+    <string name="remove_category_confirm_message">你確定要刪除分類</string>
+    <string name="default_category">預設</string>
+    <string name="remove_category_msg_0">分類 %s 已被刪除 !</string>
+    <string name="remove_category_msg_1">所有分類為 [%s] 的花費已被更新為分類 [預設]!</string>
 
     <!-- Setting Rate app -->
     <string name="setting_btn_rate_text">評分</string>

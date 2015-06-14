@@ -60,7 +60,7 @@ public class UpdateTransactionActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
-            Utils.enableStrictMode();
+//            Utils.enableStrictMode();
         }
 		super.onCreate(savedInstanceState);
 		

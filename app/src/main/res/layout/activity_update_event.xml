@@ -6,6 +6,31 @@
     tools:context="${relativePackage}.${activityClass}" >
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_new_event_title"
+        android:id="@+id/new_event_button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:onClick="addNewTag" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_event_text"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/new_event_button"
+        android:layout_alignBaseline="@id/new_event_button"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:hint="@string/input_new_event_here" />
+
+    <Button
         android:id="@+id/update_event_cancel_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +44,5 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/update_event_cancel_btn"
-        android:layout_alignParentTop="true" />
-
+        android:layout_below="@id/new_event_button" />
 </RelativeLayout>

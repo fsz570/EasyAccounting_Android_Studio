@@ -79,6 +79,7 @@
     <string name="setting_btn_event_disable_text">Disable</string>
     <string name="action_new_event_title">New Tag</string>
     <string name="edit_text_new_event">New Tag</string>
+    <string name="input_new_event_here">Input new tag here</string>
 
     <!-- Setting Category -->
     <string name="setting_btn_category_text">Category</string>
@@ -93,6 +94,10 @@
     <string name="edit_text_new_sub_category">New Category</string>
     <string name="update_category">Update</string>
     <string name="remove_category">Remove</string>
+    <string name="remove_category_confirm_message">Are you sure you want to remove category</string>
+    <string name="default_category">Default</string>
+    <string name="remove_category_msg_0">Category %s is removed!</string>
+    <string name="remove_category_msg_1">All the cost belong to[%s] is now update to category[Default]!</string>
 
     <!-- Setting Rate app -->
     <string name="setting_btn_rate_text">Rate app</string>

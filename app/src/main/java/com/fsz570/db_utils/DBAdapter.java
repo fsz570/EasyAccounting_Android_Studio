@@ -255,7 +255,7 @@ public class DBAdapter extends SQLiteOpenHelper {
 		Log.d(TAG, "updateEventName()");
 		
 		ContentValues cv = new ContentValues();
-		cv.put("event_name",newEventName);
+		cv.put("event_name", newEventName);
 		
 		openDataBase();
 		
@@ -266,10 +266,6 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 	
 	public void deleteEvent(final int eventId){
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
                 Log.d(TAG, "deleteEvent()");
 
                 openDataBase();
@@ -279,15 +275,10 @@ public class DBAdapter extends SQLiteOpenHelper {
 
                 long rowId = theDataBase.delete(EVENT_TABLE, " _id = ? ", new String[]{String.valueOf(eventId)});
                 Log.d(TAG, "rowId : " + rowId);
-            }
-        }).start();
 	}
 
     public void newEvent(final String newEventName) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
                 Log.d(TAG, "newEvent()");
 
                 ContentValues cv = new ContentValues();
@@ -298,9 +289,6 @@ public class DBAdapter extends SQLiteOpenHelper {
 
                 long rowId = theDataBase.insert(EVENT_TABLE, null, cv);
                 Log.d(TAG, "rowId : " + rowId);
-            }
-        }).start();
-
     }
 
     public int newParentCategory(String newCategoryName){
@@ -618,14 +606,10 @@ public class DBAdapter extends SQLiteOpenHelper {
 	}
 	
 	public void insertTrans(final TransactionVo transVo){
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
                 Log.d(TAG, "insertTrans()");
 
                 ContentValues cv = new ContentValues();
-                cv.put("tran_date",transVo.getTranDate());
+                cv.put("tran_date", transVo.getTranDate());
                 cv.put("tran_category_id",transVo.getTranCategoryId());
                 cv.put("tran_event_id",transVo.getTranEventId());
                 cv.put("tran_amount",transVo.getTranAmount());
@@ -635,8 +619,6 @@ public class DBAdapter extends SQLiteOpenHelper {
 
                 long rowId = theDataBase.insertOrThrow(TRANS_TABLE, null, cv);
                 Log.d(TAG, "rowId : " + rowId);
-            }
-        }).start();
 
 	}
 
@@ -767,7 +749,7 @@ public class DBAdapter extends SQLiteOpenHelper {
             @Override
             public void run() {
                 openDataBase();
-                theDataBase.delete("T_HIS_TRAN", " _id = ? ", new String[] {transVo.getId()+""});
+                theDataBase.delete("T_HIS_TRAN", " _id = ? ", new String[]{transVo.getId() + ""});
             }
         }).start();
 	}
@@ -780,7 +762,7 @@ public class DBAdapter extends SQLiteOpenHelper {
                 Log.d(TAG, "updateCategory()");
 
                 ContentValues cv = new ContentValues();
-                cv.put("seq",seq);
+                cv.put("seq", seq);
 
                 openDataBase();
 
@@ -989,4 +971,76 @@ public class DBAdapter extends SQLiteOpenHelper {
         }
         return false;
     }
+
+	public CategoryVo getCategoryById(int categoryId){
+		openDataBase();
+		Cursor cursor = null;
+		CategoryVo categoryVo = null;
+
+		cursor = theDataBase.rawQuery("SELECT _id, parent_id, tran_category_name, category_icon_id, seq FROM C_CFG_CTGR WHERE _id = ? ", new String[]{categoryId+""});
+
+		if ( cursor.moveToFirst () ) {
+			categoryVo = new CategoryVo(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4));
+		}
+
+		// closing cursor
+		cursor.close();
+		return categoryVo;
+	}
+
+	public int removeCategory(int categoryId) {
+		int trxCountInAllDeletedCategory = 0;
+		openDataBase();
+
+		List<String> removedCategoryIdList = new ArrayList<String>();
+		Cursor cursor = theDataBase.rawQuery("SELECT _id FROM C_CFG_CTGR WHERE _id = ? or parent_id = ?", new String[]{categoryId + "", categoryId + ""});
+		if ( cursor.moveToFirst () ) {
+			do {
+				removedCategoryIdList.add(cursor.getString(0));
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+
+		for(String removedCategoryId:removedCategoryIdList) {
+			cursor = theDataBase.rawQuery("SELECT COUNT(1) FROM T_HIS_TRAN WHERE tran_category_id = ?", new String[]{removedCategoryId});
+			cursor.moveToFirst();
+			int trxCountInDeletedCategory = cursor.getInt(0);
+			cursor.close();
+
+			if (trxCountInDeletedCategory > 0) {
+				CategoryVo categoryDefault = findOrCreateCategoryDefault();
+				if (categoryDefault != null) {
+					theDataBase.execSQL("UPDATE T_HIS_TRAN SET tran_category_id = ? WHERE tran_category_id = ?", new String[]{categoryDefault.getId() + "", removedCategoryId});
+				}
+			}
+			trxCountInAllDeletedCategory += trxCountInDeletedCategory;
+			theDataBase.execSQL("DELETE FROM C_CFG_CTGR WHERE _id = ? ", new String[]{removedCategoryId});
+		}
+		return trxCountInAllDeletedCategory;
+	}
+
+	public CategoryVo findOrCreateCategoryDefault(){
+		openDataBase();
+		Cursor cursor = null;
+		CategoryVo categoryVo = null;
+
+		cursor = theDataBase.rawQuery("SELECT _id, parent_id, tran_category_name, category_icon_id, seq FROM C_CFG_CTGR WHERE tran_category_name = ? ", new String[]{context.getString(R.string.default_category)});
+
+		if ( cursor.moveToFirst () ) {
+			categoryVo = new CategoryVo(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4));
+		}
+
+		if(categoryVo == null){
+			newParentCategory(context.getString(R.string.default_category));
+			cursor = theDataBase.rawQuery("SELECT _id, parent_id, tran_category_name, category_icon_id, seq FROM C_CFG_CTGR WHERE tran_category_name = ? ", new String[]{context.getString(R.string.default_category)});
+
+			if ( cursor.moveToFirst () ) {
+				categoryVo = new CategoryVo(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4));
+			}
+		}
+
+		// closing cursor
+		cursor.close();
+		return categoryVo;
+	}
 }

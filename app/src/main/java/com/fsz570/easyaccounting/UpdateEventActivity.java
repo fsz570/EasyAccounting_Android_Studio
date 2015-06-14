@@ -1,14 +1,16 @@
 package com.fsz570.easyaccounting;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.fsz570.db_utils.DBAdapter;
 import com.fsz570.easyaccounting.adapter.ListItemEventAdapter;
-import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.EventVo;
 
 import java.util.List;
@@ -22,14 +24,18 @@ public class UpdateEventActivity extends Activity {
 
 	private ListView listView;
 	private ListItemEventAdapter listItemAdapter;
+    private EditText newEventEditText;
+
+    InputMethodManager imm;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
-            Utils.enableStrictMode();
+//            Utils.enableStrictMode();
         }
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_update_event);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 
     @Override
@@ -62,10 +68,15 @@ public class UpdateEventActivity extends Activity {
 	private void initListView() {
 
 		listItemAdapter = new ListItemEventAdapter(this);
-		listItemAdapter.setDataSource(getEventAllData(true));
+
+        //這種寫法在某些機型上不知為何會有問題
+		//listItemAdapter.setDataSource(getEventAllData(true));
+        listItemAdapter.setDataSource(getEventAllData(false));
 
 		listView = (ListView) findViewById(R.id.update_event_list_view);
 		listView.setAdapter(listItemAdapter);
+
+        newEventEditText = (EditText) findViewById(R.id.new_event_text);
 	}
 	
 	
@@ -73,6 +84,15 @@ public class UpdateEventActivity extends Activity {
 	public void dismissActivity(View v) {
 	    finish();
 	}
+
+    public void addNewTag(View v){
+        if(newEventEditText.getText().length()>0) {
+            dbAdapter.newEvent(newEventEditText.getText().toString().trim());
+            listItemAdapter.setDataSource(getEventAllData(false));
+            newEventEditText.getText().clear();
+            imm.hideSoftInputFromWindow(newEventEditText.getWindowToken(), 0);
+        }
+    }
 
 	public List<EventVo> getEventAllData(boolean addNewEventOnTop) {
 				
