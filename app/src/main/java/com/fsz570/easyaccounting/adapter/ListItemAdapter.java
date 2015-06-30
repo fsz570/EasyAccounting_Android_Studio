@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.fsz570.easyaccounting.R;
+import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.TransactionVo;
 
 import java.util.ArrayList;
@@ -16,11 +17,13 @@ import java.util.List;
 public class ListItemAdapter extends BaseAdapter {
 	
 	private static final String TAG = "ListItemAdapter";
+	private Context context;
 	private LayoutInflater mLayoutInflater;
 	
 	private List<TransactionVo> mList;
 	
 	public ListItemAdapter(Context mContext){
+		context = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         
         mList = new ArrayList<TransactionVo>();
@@ -62,7 +65,7 @@ public class ListItemAdapter extends BaseAdapter {
 		
 		holder.getCategoryTextView().setText(mList.get(position).getTranCategoryName());
 		holder.getAmountTextView().setText(mList.get(position).getTranAmountString());
-		holder.getDateTextView().setText(mList.get(position).getTranDate());
+		holder.getDateTextView().setText(Utils.transferSqliteDateFormatForLocal(mList.get(position).getTranDate(), context));
         if(mList.get(position).getTranEventName() != null && mList.get(position).getTranEventName().length() > 0) {
             holder.getEventTextView().setText("["+mList.get(position).getTranEventName()+"]");
         }

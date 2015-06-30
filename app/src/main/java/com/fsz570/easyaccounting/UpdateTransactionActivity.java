@@ -114,7 +114,7 @@ public class UpdateTransactionActivity extends Activity {
 		Log.d(TAG, "initUi()");
 		
 		TextView dateText = (TextView)findViewById(R.id.date_text);
-		dateText.setText(transVo.getTranDate());
+		dateText.setText(Utils.transferSqliteDateFormatForLocal(transVo.getTranDate(), this));
 
         EditText tranComment = (EditText)findViewById(R.id.transaction_item_comment);
         tranComment.setText(transVo.getTranComment());

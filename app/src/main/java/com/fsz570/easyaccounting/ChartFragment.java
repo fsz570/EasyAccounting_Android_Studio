@@ -31,7 +31,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ValueFormatter;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,7 +47,7 @@ public class ChartFragment extends Fragment {
 	private View rootView;
 	private AccountingActivity parentActivity;
 
-	private SimpleDateFormat sdf;
+	private DateFormat sdf;
 
 	private ToggleButton queryDayBtn, queryWeekBtn, queryMonthBtn, queryYearBtn, queryAllBtn;
 
@@ -73,7 +73,7 @@ public class ChartFragment extends Fragment {
  
 		rootView = inflater.inflate(R.layout.fragment_chart, container, false);
 		parentActivity = ((AccountingActivity) getActivity());
-		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf = android.text.format.DateFormat.getDateFormat(parentActivity);
 		queryPanel = ((LinearLayout)rootView.findViewById(R.id.chart_query_panel));
 
 		return rootView;

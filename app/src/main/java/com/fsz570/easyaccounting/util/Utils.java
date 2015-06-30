@@ -1,7 +1,9 @@
 package com.fsz570.easyaccounting.util;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
@@ -15,14 +17,17 @@ import com.fsz570.easyaccounting.UpdateEventActivity;
 import com.fsz570.easyaccounting.UpdateTransactionActivity;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Utils {
+
+    private static String TAG = "Utils";
 
     private Utils() {};
 
@@ -31,7 +36,8 @@ public class Utils {
 	}
 
 	public static String formatAmount(double tranAmount) {
-		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+		//NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
 		// If not integer
 		if (tranAmount != Math.floor(tranAmount)) {
@@ -226,6 +232,34 @@ public class Utils {
 
     public static boolean isContainOnlyZeroAndDot(String value){
         return value.replaceAll("0", "").replaceAll(".","").length() == 0;
+    }
+
+    public static String transferDateFormatForSqlite(String dateStr, Context context){
+        DateFormat df = android.text.format.DateFormat.getDateFormat(context);
+        String result = dateStr;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            Date date = df.parse(dateStr);
+            result = sdf.format(date);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        Log.d(TAG, "transferDateFormatForSqlite : " + dateStr + "==>" + result);
+        return result;
+    }
+
+    public static String transferSqliteDateFormatForLocal(String dateStr, Context context){
+        DateFormat df = android.text.format.DateFormat.getDateFormat(context);
+        String result = dateStr;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            Date date = sdf.parse(dateStr);
+            result = df.format(date);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        Log.d(TAG, "transferDateFormatForSqlite : " + dateStr + "==>" + result);
+        return result;
     }
 
     public static void enableStrictMode() {

@@ -20,7 +20,6 @@ import com.fsz570.easyaccounting.util.Utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,7 +34,7 @@ public class fszDatePicker extends TableLayout {
 	private ImageButton rightBtn;
 	private ImageButton calendarBtn;
 
-	private SimpleDateFormat sdf;
+	private static DateFormat sdf;
 
 	private final LayoutInflater inflater;
 
@@ -61,7 +60,7 @@ public class fszDatePicker extends TableLayout {
 	private void init(Context context) {
 		this.isInEditMode();
 		parentActivity = (Activity)context;
-		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf = android.text.format.DateFormat.getDateFormat(context);
 
 		initializeLayoutBasics(context);
 		initialComponent();
@@ -117,7 +116,7 @@ public class fszDatePicker extends TableLayout {
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			// Use the current date as the default date in the picker
 			TextView dateText = (TextView) getActivity().findViewById(R.id.date_text);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 			Calendar date = Calendar.getInstance();
 
@@ -145,8 +144,8 @@ public class fszDatePicker extends TableLayout {
 			TextView dateText = (TextView) getActivity().findViewById(R.id.date_text);
 			Calendar date = Calendar.getInstance();
 			date.set(year, month, day);
-			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			dateText.setText(formatter.format(date.getTime()));
+//			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			dateText.setText(sdf.format(date.getTime()));
 		}
 	}
 

@@ -33,7 +33,7 @@ import com.fsz570.easyaccounting.vo.CategoryVo;
 import com.fsz570.easyaccounting.vo.EventVo;
 import com.fsz570.easyaccounting.vo.TransactionVo;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -47,7 +47,7 @@ public class ListFragment extends Fragment {
 	private View rootView;
 	private AccountingActivity parentActivity;
 
-	private SimpleDateFormat sdf;
+	private DateFormat sdf;
 
 	private ToggleButton queryDayBtn;
 	private ToggleButton queryWeekBtn;
@@ -81,7 +81,7 @@ public class ListFragment extends Fragment {
 
 		rootView = inflater.inflate(R.layout.fragment_list, container, false);
 		parentActivity = ((AccountingActivity) getActivity());
-		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf = android.text.format.DateFormat.getDateFormat(parentActivity);
 		queryPanel = ((LinearLayout)rootView.findViewById(R.id.query_panel));
 
 		return rootView;

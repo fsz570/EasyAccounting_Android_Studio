@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.fsz570.easyaccounting.R;
 import com.fsz570.easyaccounting.util.Consts;
+import com.fsz570.easyaccounting.util.Utils;
 import com.fsz570.easyaccounting.vo.CategoryVo;
 import com.fsz570.easyaccounting.vo.EventVo;
 import com.fsz570.easyaccounting.vo.PieChartDataVo;
@@ -476,18 +477,19 @@ public class DBAdapter extends SQLiteOpenHelper {
 	public List<TransactionVo> getTransactions(String startDate, String endDate, int eventId, int categoryId){
 
 		List<TransactionVo> trans = new ArrayList<TransactionVo>();
-		
+		String fStartDate = Utils.transferDateFormatForSqlite(startDate, context);
+		String fEndDate = Utils.transferDateFormatForSqlite(endDate, context);
 		openDataBase();
 		
 		Cursor cursor;
 		if(eventId == Consts.NO_EVENT_ID && categoryId == Consts.NO_CATEGORY_ID){
-			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {startDate, endDate});
+			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {fStartDate, fEndDate});
 		}else if(eventId != Consts.NO_EVENT_ID  && categoryId == Consts.NO_CATEGORY_ID){
-			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {startDate, endDate, eventId+""});
+			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {fStartDate, fEndDate, eventId+""});
 		}else if(eventId == Consts.NO_EVENT_ID && categoryId != Consts.NO_CATEGORY_ID){
-			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {startDate, endDate, categoryId+"", categoryId+""});
+			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {fStartDate, fEndDate, categoryId+"", categoryId+""});
 		}else{
-			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {startDate, endDate, eventId+"", categoryId+"", categoryId+""});
+			cursor = theDataBase.rawQuery(getQueryTransactionString(eventId, categoryId), new String[] {fStartDate, fEndDate, eventId+"", categoryId+"", categoryId+""});
 		}
 		
 	    if ( cursor.moveToFirst () ) {
@@ -507,20 +509,21 @@ public class DBAdapter extends SQLiteOpenHelper {
 		Log.d(TAG, "getTransactionsForChart()!");
 		
 		List<PieChartDataVo> trans = new ArrayList<PieChartDataVo>();
-		
+		String fStartDate = Utils.transferDateFormatForSqlite(startDate, context);
+		String fEndDate = Utils.transferDateFormatForSqlite(endDate, context);
 		openDataBase();
 		
 		Cursor cursor;
         String params[];
 
 		if(eventId == Consts.NO_EVENT_ID && categoryId == Consts.NO_CATEGORY_ID){
-            params = new String[] {startDate, endDate};
+            params = new String[] {fStartDate, fEndDate};
 		}else if(eventId != Consts.NO_EVENT_ID && categoryId == Consts.NO_CATEGORY_ID){
-            params = new String[] {startDate, endDate, eventId+""};
+            params = new String[] {fStartDate, fEndDate, eventId+""};
 		}else if(eventId == Consts.NO_EVENT_ID && categoryId != Consts.NO_CATEGORY_ID){
-            params = new String[] {startDate, endDate, categoryId+"", categoryId+""};
+            params = new String[] {fStartDate, fEndDate, categoryId+"", categoryId+""};
 		}else{
-            params = new String[] {startDate, endDate, eventId+"", categoryId+"", categoryId+""};
+            params = new String[] {fStartDate, fEndDate, eventId+"", categoryId+"", categoryId+""};
 		}
 
         cursor = theDataBase.rawQuery(getQueryTransactionForChartString(true, eventId, categoryId), params);
@@ -609,7 +612,7 @@ public class DBAdapter extends SQLiteOpenHelper {
                 Log.d(TAG, "insertTrans()");
 
                 ContentValues cv = new ContentValues();
-                cv.put("tran_date", transVo.getTranDate());
+                cv.put("tran_date", Utils.transferDateFormatForSqlite(transVo.getTranDate(), context));
                 cv.put("tran_category_id",transVo.getTranCategoryId());
                 cv.put("tran_event_id",transVo.getTranEventId());
                 cv.put("tran_amount",transVo.getTranAmount());
@@ -629,7 +632,7 @@ public class DBAdapter extends SQLiteOpenHelper {
             @Override
             public void run() {
                 ContentValues cv = new ContentValues();
-                cv.put("tran_date", transVo.getTranDate());
+                cv.put("tran_date", Utils.transferDateFormatForSqlite(transVo.getTranDate(), context));
                 cv.put("tran_category_id", transVo.getTranCategoryId());
                 cv.put("tran_event_id", transVo.getTranEventId());
                 cv.put("tran_amount", transVo.getTranAmount());
@@ -909,9 +912,9 @@ public class DBAdapter extends SQLiteOpenHelper {
     public long getExpenseByMonth(String now){
         Log.d(TAG, "getMonthlyBudget()");
         long monthlyExpense = 0;
-
+		String fNow = Utils.transferDateFormatForSqlite(now, context);
         openDataBase();
-        Cursor cursor = theDataBase.rawQuery(getExpenseByMonthSql(), new String[]{now,now});
+        Cursor cursor = theDataBase.rawQuery(getExpenseByMonthSql(), new String[]{fNow,fNow});
 
         if ( cursor.moveToFirst () ) {
             do {
