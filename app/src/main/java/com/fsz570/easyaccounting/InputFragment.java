@@ -113,7 +113,7 @@ public class InputFragment extends Fragment {
 
         if (monthlyBudget > 0) {
             budgetLayout.setVisibility(View.VISIBLE);
-            tvBudget.setText(expenseThisMonth + " / " + monthlyBudget);
+            tvBudget.setText(Utils.formatAmount(expenseThisMonth) + " / " + Utils.formatAmount(monthlyBudget));
 
             budgetLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
@@ -194,25 +194,27 @@ public class InputFragment extends Fragment {
         categorySpinner.requestFocus();
 	}
 
-	private void initCalculator(){		
-		calCalculationInput = (EditText)rootView.findViewById(R.id.cal_calculation_input);
+	private void initCalculator() {
+        calCalculationInput = (EditText) rootView.findViewById(R.id.cal_calculation_input);
         calCalculationInput.getBackground().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
 
-		calculator = new Calculator();
-		
-		df.setMinimumFractionDigits(0);
-		df.setMaximumFractionDigits(4);
+        calculator = new Calculator();
+
+        df.setMinimumFractionDigits(0);
+        df.setMaximumFractionDigits(4);
         df.setMinimumIntegerDigits(1);
         df.setMaximumIntegerDigits(8);
         df.setGroupingSize(3);
         df.setGroupingUsed(true);
-		
-		//Set OnClickListener for all buttons
+
+        //Set OnClickListener for all buttons
         View.OnClickListener btnClickListener = genCalculatorOnClickListener();
-		for(int btnId:btnAllAry){
-			((Button) rootView.findViewById(btnId)).setOnClickListener(btnClickListener);
-		}
-	}
+        for (int btnId : btnAllAry) {
+            ((Button) rootView.findViewById(btnId)).setOnClickListener(btnClickListener);
+        }
+        Button btnDot = (Button) rootView.findViewById(R.id.cal_btn_dot);
+        btnDot.setText(Consts.DECIMAL_SEPRATOR);
+    }
 
     private void initComment(){
         final EditText mEditText = (EditText)rootView.findViewById(R.id.transaction_item_comment);
@@ -240,31 +242,38 @@ public class InputFragment extends Fragment {
 		            // digit was pressed
 		            if (userIsInTheMiddleOfTypingANumber) {
 		 
-		                if (buttonPressed.equals(".") && calCalculationInput.getText().toString().contains(".")) {
+		                if (buttonPressed.equals(Consts.DECIMAL_SEPRATOR) && calCalculationInput.getText().toString().contains(Consts.DECIMAL_SEPRATOR)) {
 		                    // ERROR PREVENTION
 		                    // Eliminate entering multiple decimals
 		                } else {
                             //calCalculationInput.append(buttonPressed);
-                            StringBuffer tmpBuf = new StringBuffer(calCalculationInput.getText().toString().replaceAll(",", ""));
+                            StringBuffer tmpBuf = new StringBuffer(calCalculationInput.getText().toString());
                             tmpBuf.append(buttonPressed);
 
                             //Avoid parseDouble eat the input of "0."
                             if(Utils.isContainOnlyZeroAndDot(tmpBuf.toString())) {
                                 calCalculationInput.setText(tmpBuf.toString());
+                            }else if(buttonPressed.equals(Consts.DECIMAL_SEPRATOR)){
+                                calCalculationInput.setText(tmpBuf.toString());
                             }else{
-                                calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(tmpBuf.toString())));
+                                if(tmpBuf.indexOf(Consts.DECIMAL_SEPRATOR)>0 && (tmpBuf.length() - tmpBuf.lastIndexOf(Consts.DECIMAL_SEPRATOR))<4){
+                                    calCalculationInput.setText(tmpBuf.toString());
+                                }else {
+                                    calCalculationInput.setText(Utils.formatAmount(tmpBuf.toString()));
+                                }
                             }
 		                }
 		 
 		            } else {
 		 
-		                if (buttonPressed.equals(".")) {
+		                if (buttonPressed.equals(Consts.DECIMAL_SEPRATOR)) {
 		                    // ERROR PREVENTION
 		                    // This will avoid error if only the decimal is hit before an operator, by placing a leading zero
 		                    // before the decimal
 		                	calCalculationInput.setText(0 + buttonPressed);
 		                } else {
-		                	calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(buttonPressed)));
+		                	//calCalculationInput.setText(Utils.formatAmount(Utils.parseDouble(buttonPressed)));
+                            calCalculationInput.setText(buttonPressed);
 		                }
 		 
 		                userIsInTheMiddleOfTypingANumber = true;
@@ -273,7 +282,7 @@ public class InputFragment extends Fragment {
 		        } else {
 		            // operation was pressed
 		            if (userIsInTheMiddleOfTypingANumber) {
-		                calculator.setOperand(Double.parseDouble(calCalculationInput.getText().toString().replaceAll(",","")));
+		                calculator.setOperand(Utils.parseDouble(calCalculationInput.getText().toString()));
 		                userIsInTheMiddleOfTypingANumber = false;
 		            }
 		 
@@ -320,7 +329,7 @@ public class InputFragment extends Fragment {
 		TransactionVo transVo = null;
 		
 		try{
-			double tranAmount = Double.parseDouble(calCalculationInput.getText().toString().replaceAll(",",""));
+			double tranAmount = Utils.parseDouble(calCalculationInput.getText().toString());
 			
 			transVo = new TransactionVo();
 			transVo.setTranDate(getCurrentDate());

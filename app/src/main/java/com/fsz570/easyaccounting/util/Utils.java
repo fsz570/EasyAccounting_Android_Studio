@@ -19,6 +19,7 @@ import com.fsz570.easyaccounting.vo.CategoryVo;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +30,9 @@ public class Utils {
 
     private static String TAG = "Utils";
 
+//    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance();
+//    private static final DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+
     private Utils() {};
 
 	public static Date getToday() {
@@ -37,16 +41,53 @@ public class Utils {
 
 	public static String formatAmount(double tranAmount) {
 		//NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-        NumberFormat numberFormat = NumberFormat.getNumberInstance();
 
+        //DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
 		// If not integer
-		if (tranAmount != Math.floor(tranAmount)) {
+//		if (tranAmount != Math.floor(tranAmount)) {
 			numberFormat.setMaximumFractionDigits(2);
-			numberFormat.setMinimumFractionDigits(2);
-		}
+////			numberFormat.setMinimumFractionDigits(2);
+//		}
 
 		return numberFormat.format(tranAmount);
 	}
+
+    public static String formatAmount(String tranAmount){
+        if(".".equals(Consts.GROUPING_SEPRATOR)) {
+            return Utils.formatAmount(Utils.parseDouble(tranAmount.replaceAll("\\.", "")));
+        }else{
+            return Utils.formatAmount(Utils.parseDouble(tranAmount.replaceAll(Consts.GROUPING_SEPRATOR, "")));
+        }
+    }
+
+    public static double parseDouble(String value){
+        try {
+            NumberFormat numberFormat = NumberFormat.getNumberInstance();
+            if(".".equals(Consts.GROUPING_SEPRATOR)) {
+                return numberFormat.parse(value.replaceAll("\\.", "")).doubleValue();
+            }else{
+                return numberFormat.parse(value.replaceAll(Consts.GROUPING_SEPRATOR, "")).doubleValue();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static long parseLong(String value){
+        try {
+            NumberFormat numberFormat = NumberFormat.getNumberInstance();
+            if(".".equals(Consts.GROUPING_SEPRATOR)) {
+                return numberFormat.parse(value.replaceAll("\\.", "")).longValue();
+            }else{
+                return numberFormat.parse(value.replaceAll(Consts.GROUPING_SEPRATOR, "")).longValue();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
 	public static List<CategoryVo> populateCategory(
 			List<CategoryVo> parentCategoryList) {
@@ -112,7 +153,7 @@ public class Utils {
 	    };
 
 	    // 1dp/ms
-	    a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density) * slowRate);
+	    a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density) * slowRate);
 	    v.startAnimation(a);
 	}
 
@@ -231,7 +272,11 @@ public class Utils {
     }
 
     public static boolean isContainOnlyZeroAndDot(String value){
-        return value.replaceAll("0", "").replaceAll(".","").length() == 0;
+        if(".".equals(Consts.DECIMAL_SEPRATOR)) {
+            return value.replaceAll("0", "").replaceAll("\\.", "").length() == 0;
+        }else{
+            return value.replaceAll("0", "").replaceAll(Consts.DECIMAL_SEPRATOR, "").length() == 0;
+        }
     }
 
     public static String transferDateFormatForSqlite(String dateStr, Context context){
@@ -260,6 +305,13 @@ public class Utils {
         }
         Log.d(TAG, "transferDateFormatForSqlite : " + dateStr + "==>" + result);
         return result;
+    }
+
+    public static boolean shouldItFormat(String newValue){
+        boolean shouldFormat = false;
+
+
+        return shouldFormat;
     }
 
     public static void enableStrictMode() {

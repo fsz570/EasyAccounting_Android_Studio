@@ -197,6 +197,9 @@ public class UpdateTransactionActivity extends Activity {
 		for(int btnId:btnAllAry){
 			((Button) findViewById(btnId)).setOnClickListener(btnClickListener);
 		}
+
+        Button btnDot = (Button) findViewById(R.id.cal_btn_dot);
+        btnDot.setText(Consts.DECIMAL_SEPRATOR);
 		
 		((LinearLayout)findViewById(R.id.cal_table_row_btn)).removeView((findViewById(R.id.cal_btn_insert)));
 
@@ -222,31 +225,38 @@ public class UpdateTransactionActivity extends Activity {
 		            // digit was pressed
 		            if (userIsInTheMiddleOfTypingANumber) {
 		 
-		                if (buttonPressed.equals(".") && calCalculationInput.getText().toString().contains(".")) {
+		                if (buttonPressed.equals(Consts.DECIMAL_SEPRATOR) && calCalculationInput.getText().toString().contains(Consts.DECIMAL_SEPRATOR)) {
 		                    // ERROR PREVENTION
 		                    // Eliminate entering multiple decimals
 		                } else {
                             //calCalculationInput.append(buttonPressed);
-                            StringBuffer tmpBuf = new StringBuffer(calCalculationInput.getText().toString().replaceAll(",", ""));
+                            StringBuffer tmpBuf = new StringBuffer(calCalculationInput.getText().toString());
                             tmpBuf.append(buttonPressed);
 
                             //Avoid parseDouble eat the input of "0."
                             if(Utils.isContainOnlyZeroAndDot(tmpBuf.toString())) {
                                 calCalculationInput.setText(tmpBuf.toString());
+                            }else if(buttonPressed.equals(Consts.DECIMAL_SEPRATOR)){
+                                calCalculationInput.setText(tmpBuf.toString());
                             }else{
-                                calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(tmpBuf.toString())));
+								if(tmpBuf.indexOf(Consts.DECIMAL_SEPRATOR)>0 && (tmpBuf.length() - tmpBuf.lastIndexOf(Consts.DECIMAL_SEPRATOR))<4){
+									calCalculationInput.setText(tmpBuf.toString());
+								}else {
+									calCalculationInput.setText(Utils.formatAmount(tmpBuf.toString()));
+								}
                             }
 		                }
 		 
 		            } else {
 		 
-		                if (buttonPressed.equals(".")) {
+		                if (buttonPressed.equals(Consts.DECIMAL_SEPRATOR)) {
 		                    // ERROR PREVENTION
 		                    // This will avoid error if only the decimal is hit before an operator, by placing a leading zero
 		                    // before the decimal
 		                	calCalculationInput.setText(0 + buttonPressed);
 		                } else {
-                            calCalculationInput.setText(Utils.formatAmount(Double.parseDouble(buttonPressed)));
+                            //calCalculationInput.setText(Utils.formatAmount(Utils.parseDouble(buttonPressed)));
+							calCalculationInput.setText(buttonPressed);
 		                }
 		 
 		                userIsInTheMiddleOfTypingANumber = true;
@@ -256,7 +266,7 @@ public class UpdateTransactionActivity extends Activity {
 		        } else if(!(v.getId()==R.id.cal_btn_confirm || v.getId()==R.id.cal_btn_cancel )){
 		            // operation was pressed
 		            if (userIsInTheMiddleOfTypingANumber) {
-		                calculator.setOperand(Double.parseDouble(calCalculationInput.getText().toString()));
+		                calculator.setOperand(Utils.parseDouble(calCalculationInput.getText().toString()));
 		                userIsInTheMiddleOfTypingANumber = false;
 		            }
 		 
@@ -312,7 +322,7 @@ public class UpdateTransactionActivity extends Activity {
 		Log.d(TAG, "genTransVo()");
 			
 		try{
-            double tranAmount = Double.parseDouble(calCalculationInput.getText().toString().replaceAll(",",""));
+            double tranAmount = Utils.parseDouble(calCalculationInput.getText().toString());
 			
 			TextView dateText = (TextView)findViewById(R.id.date_text);
 			dateStr = dateText.getText().toString();

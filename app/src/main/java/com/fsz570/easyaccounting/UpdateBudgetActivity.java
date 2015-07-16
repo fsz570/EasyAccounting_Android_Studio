@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fsz570.db_utils.DBAdapter;
+import com.fsz570.easyaccounting.util.Consts;
+import com.fsz570.easyaccounting.util.Utils;
 
 
 public class UpdateBudgetActivity extends Activity {
@@ -104,8 +106,8 @@ public class UpdateBudgetActivity extends Activity {
         long monthlyBudget = 0;
 
         try{
-            String monthlyBudgetStr = etMonthlyBidget.getText().toString().replaceAll(",", "");
-            monthlyBudget = Long.parseLong(monthlyBudgetStr);
+            String monthlyBudgetStr = etMonthlyBidget.getText().toString();
+            monthlyBudget = Utils.parseLong(monthlyBudgetStr);
         }catch (Exception e){
             Log.e(TAG, e.getMessage());
         }

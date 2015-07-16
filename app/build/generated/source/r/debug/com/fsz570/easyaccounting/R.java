@@ -19,50 +19,50 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int metaButtonBarStyle=0x7f010000;
     }
     public static final class color {
-        public static final int activity_background=0x7f040000;
-        public static final int black_overlay=0x7f040001;
-        public static final int calculator_panel_btn_pressed_style_solid=0x7f040002;
-        public static final int calculator_panel_btn_pressed_style_stroke=0x7f040003;
-        public static final int calculator_panel_btn_style_solid=0x7f040004;
-        public static final int calculator_panel_btn_style_stroke=0x7f040005;
-        public static final int chart_background_style_solid=0x7f040006;
-        public static final int chart_background_style_stroke=0x7f040007;
-        public static final int command_btn_pressed_style_solid=0x7f040008;
-        public static final int command_btn_pressed_style_stroke=0x7f040009;
-        public static final int command_btn_style_solid=0x7f04000a;
-        public static final int command_btn_style_stroke=0x7f04000b;
-        public static final int common_btn_pressed_style_solid=0x7f04000c;
-        public static final int common_btn_pressed_style_stroke=0x7f04000d;
-        public static final int common_btn_style_solid=0x7f04000e;
-        public static final int common_btn_style_stroke=0x7f04000f;
-        public static final int event_setting_background_style_solid=0x7f040010;
-        public static final int event_setting_background_style_stroke=0x7f040011;
-        public static final int event_toggle_btn_background_style_solid=0x7f040012;
-        public static final int event_toggle_btn_checked_background_style_solid=0x7f040013;
-        public static final int input_background_style_solid=0x7f040014;
-        public static final int input_background_style_stroke=0x7f040015;
-        public static final int input_panel_style_solid=0x7f040016;
-        public static final int input_panel_style_stroke=0x7f040017;
-        public static final int list_background_style_solid=0x7f040018;
-        public static final int list_background_style_stroke=0x7f040019;
-        public static final int query_panel_btn_pressed_style_solid=0x7f04001a;
-        public static final int query_panel_btn_pressed_style_stroke=0x7f04001b;
-        public static final int query_panel_btn_style_solid=0x7f04001c;
-        public static final int query_panel_btn_style_stroke=0x7f04001d;
-        public static final int query_panel_style_solid=0x7f04001e;
-        public static final int query_panel_style_stroke=0x7f04001f;
-        public static final int setting_background=0x7f040020;
-        public static final int setting_background_style_solid=0x7f040021;
-        public static final int setting_background_style_stroke=0x7f040022;
-        public static final int setting_btn_pressed_style_solid=0x7f040023;
-        public static final int setting_btn_pressed_style_stroke=0x7f040024;
-        public static final int setting_btn_style_solid=0x7f040025;
-        public static final int setting_btn_style_stroke=0x7f040026;
-        public static final int spinner_dropdown_pressed_style_solid=0x7f040027;
-        public static final int spinner_dropdown_pressed_style_stroke=0x7f040028;
-        public static final int spinner_dropdown_style_solid=0x7f040029;
-        public static final int spinner_dropdown_style_stroke=0x7f04002a;
-        public static final int toggle_btn_text_color=0x7f04002b;
+        public static final int activity_background=0x7f070000;
+        public static final int black_overlay=0x7f070001;
+        public static final int calculator_panel_btn_pressed_style_solid=0x7f070002;
+        public static final int calculator_panel_btn_pressed_style_stroke=0x7f070003;
+        public static final int calculator_panel_btn_style_solid=0x7f070004;
+        public static final int calculator_panel_btn_style_stroke=0x7f070005;
+        public static final int chart_background_style_solid=0x7f070006;
+        public static final int chart_background_style_stroke=0x7f070007;
+        public static final int command_btn_pressed_style_solid=0x7f070008;
+        public static final int command_btn_pressed_style_stroke=0x7f070009;
+        public static final int command_btn_style_solid=0x7f07000a;
+        public static final int command_btn_style_stroke=0x7f07000b;
+        public static final int common_btn_pressed_style_solid=0x7f07000c;
+        public static final int common_btn_pressed_style_stroke=0x7f07000d;
+        public static final int common_btn_style_solid=0x7f07000e;
+        public static final int common_btn_style_stroke=0x7f07000f;
+        public static final int event_setting_background_style_solid=0x7f070010;
+        public static final int event_setting_background_style_stroke=0x7f070011;
+        public static final int event_toggle_btn_background_style_solid=0x7f070012;
+        public static final int event_toggle_btn_checked_background_style_solid=0x7f070013;
+        public static final int input_background_style_solid=0x7f070014;
+        public static final int input_background_style_stroke=0x7f070015;
+        public static final int input_panel_style_solid=0x7f070016;
+        public static final int input_panel_style_stroke=0x7f070017;
+        public static final int list_background_style_solid=0x7f070018;
+        public static final int list_background_style_stroke=0x7f070019;
+        public static final int query_panel_btn_pressed_style_solid=0x7f07001a;
+        public static final int query_panel_btn_pressed_style_stroke=0x7f07001b;
+        public static final int query_panel_btn_style_solid=0x7f07001c;
+        public static final int query_panel_btn_style_stroke=0x7f07001d;
+        public static final int query_panel_style_solid=0x7f07001e;
+        public static final int query_panel_style_stroke=0x7f07001f;
+        public static final int setting_background=0x7f070020;
+        public static final int setting_background_style_solid=0x7f070021;
+        public static final int setting_background_style_stroke=0x7f070022;
+        public static final int setting_btn_pressed_style_solid=0x7f070023;
+        public static final int setting_btn_pressed_style_stroke=0x7f070024;
+        public static final int setting_btn_style_solid=0x7f070025;
+        public static final int setting_btn_style_stroke=0x7f070026;
+        public static final int spinner_dropdown_pressed_style_solid=0x7f070027;
+        public static final int spinner_dropdown_pressed_style_stroke=0x7f070028;
+        public static final int spinner_dropdown_style_solid=0x7f070029;
+        public static final int spinner_dropdown_style_stroke=0x7f07002a;
+        public static final int toggle_btn_text_color=0x7f07002b;
     }
     public static final class dimen {
         public static final int activity_horizontal_margin=0x7f050000;
@@ -392,23 +392,23 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int update_transaction_success=0x7f06005f;
     }
     public static final class style {
-        /** 
+        /**  API 11 theme customizations can go here. 
+ API 14 theme customizations can go here. 
+
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
- API 11 theme customizations can go here. 
- API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f070000;
-        public static final int AppTheme=0x7f070001;
-        public static final int ButtonBar=0x7f070002;
-        public static final int ButtonBarButton=0x7f070003;
-        public static final int FullscreenTheme=0x7f070004;
-        public static final int MyActionBarTabBarStyle=0x7f070005;
-        public static final int MyActionBarTabStyle=0x7f070006;
-        public static final int spinnerDropDownItemStyle=0x7f070007;
-        public static final int spinnerItemStyle=0x7f070008;
+        public static final int AppBaseTheme=0x7f040000;
+        public static final int AppTheme=0x7f040001;
+        public static final int ButtonBar=0x7f040002;
+        public static final int ButtonBarButton=0x7f040003;
+        public static final int FullscreenTheme=0x7f040004;
+        public static final int MyActionBarTabBarStyle=0x7f040005;
+        public static final int MyActionBarTabStyle=0x7f040006;
+        public static final int spinnerDropDownItemStyle=0x7f040007;
+        public static final int spinnerItemStyle=0x7f040008;
     }
     public static final class styleable {
         /** Attributes that can be used with a ButtonBarContainerTheme.
